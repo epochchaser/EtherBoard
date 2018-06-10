@@ -2,10 +2,14 @@
   "name": "react_",
   "version": "0.1.0",
   "description": "Simple board using ethereum block chain.",
-  "keywords": ["ethereum", "board", "blockchain"],
+  "keywords": [
+    "ethereum",
+    "board",
+    "blockchain"
+  ],
   "author": {
-    "name" : "epochchaser",
-    "email" : "epochchaser@gmail.com"
+    "name": "epochchaser",
+    "email": "epochchaser@gmail.com"
   },
   "bugs": {
     "url": "http://github.com/epochchaser/etherboard/issues",
@@ -14,9 +18,11 @@
   "license": "MIT",
   "repository": "https://github.com/epochchaser/EtherBoard",
   "dependencies": {
-    "mdbreact": "^4.4.0",
+    "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4"
   },
   "scripts": {
