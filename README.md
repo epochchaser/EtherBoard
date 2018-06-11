@@ -4,7 +4,27 @@
 - react
 - truffle
 
-## Install
+## Install dependencies
+```
+$ npm install
+```
+
+## Run
+```
+$ npm start
+```
+
+## Build
+```
+$ npm build
+```
+
+
+
+
+## Etc
+
+### Create Project
 - [create-react-app](https://github.com/facebook/create-react-app#creating-an-app)
 ```
 $ npm install -g create-react-app
