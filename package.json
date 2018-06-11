@@ -1,10 +1,28 @@
 {
   "name": "react_",
   "version": "0.1.0",
-  "private": true,
+  "description": "Simple board using ethereum block chain.",
+  "keywords": [
+    "ethereum",
+    "board",
+    "blockchain"
+  ],
+  "author": {
+    "name": "epochchaser",
+    "email": "epochchaser@gmail.com"
+  },
+  "bugs": {
+    "url": "http://github.com/epochchaser/etherboard/issues",
+    "email": "epochchaser@gmail.com"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/epochchaser/EtherBoard",
   "dependencies": {
+    "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4"
   },
   "scripts": {
@@ -12,6 +30,25 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "dev-server": "webpack-dev-server --config ./webpack.dev.config.js --watch --open"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-loader": "^6.2.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-react-app": "^0.2.1",
+    "css-loader": "^0.28.4",
+    "eslint": "^4.8.0",
+    "eslint-plugin-react": "^7.5.1",
+    "html-webpack-plugin": "^2.30.1",
+    "jshint": "^2.9.5",
+    "mdbootstrap": "^4.4.3",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.5.5",
+    "webpack-dev-server": "^2.7.1",
     "webpack": "^3.10.0"
   }
 }
