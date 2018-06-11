@@ -43,7 +43,7 @@ const styles = theme => ({
   },
 });
 
-class SignUpPage extends React.Component {
+class SignUp extends React.Component {
   state = { expanded: false };
 
   handleExpandClick = () => {
@@ -134,8 +134,8 @@ class SignUpPage extends React.Component {
   }
 }
 
-SignUpPage.propTypes = {
+SignUp.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SignUpPage);
+export default withStyles(styles)(SignUp);

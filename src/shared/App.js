@@ -7,29 +7,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import Button from "@material-ui/core/Button"
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Create from "@material-ui/icons/Create";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { NavLink } from 'react-router-dom';
-import Routes from './Routes';
+import Routes from '../Routes';
 
-/*
-              <NavbarNav className="ml-auto">
-                <NavItem>
-                  <NavLink className="nav-link" to="/">Home</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink className="nav-link" to="/css">CSS</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink className="nav-link" to="/components">Components</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink className="nav-link" to="/javascript">JavaScript</NavLink>
-                </NavItem>
-              </NavbarNav>
-*/
+import Login from "../components/Login";
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -47,6 +34,7 @@ class App extends Component {
   state = {
     auth: true,
     anchorEl: null,
+    openLogin : false,
   };
 
   handleChange = (event, checked) => {
@@ -61,21 +49,55 @@ class App extends Component {
     this.setState({ anchorEl: null });
   };
 
+  handleLoginDialog = () => {
+    this.setState({
+      ...this.state,
+      openLogin : !this.state.openLogin
+    })
+  }
+
   render() {
-    const { auth, anchorEl } = this.state;
+    const { classes } = this.props;
+    const { auth, anchorEl, openLogin } = this.state;
+    const { handleLoginDialog } = this;
     const open = Boolean(anchorEl);
 
     return (
       <Router>
-        <div>
+        <div className={classes.root}>
           <AppBar position="static">
             <Toolbar>
-              <IconButton color="inherit" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="title" color="inherit" >
+              <Typography variant="title" color="inherit" className={classes.flex}>
                 ETHEREUM BOARD
               </Typography>
+
+              <Button color="inherit" onClick={handleLoginDialog}>
+                LOGIN
+              </Button>
+
+              <Login
+                open={openLogin}
+                onClose={handleLoginDialog}
+              />
+
+              <Button 
+                color="inherit" 
+                component={NavLink}
+                to="/signup"
+              >
+                SIGN UP
+              </Button>
+
+              <div>
+                <IconButton
+                    component={NavLink}
+                    to="/writing"
+                    color="inherit"
+                >
+                  <Create />
+                </IconButton>
+              </div>
+
               {auth && (
                 <div>
                   <IconButton
@@ -86,6 +108,7 @@ class App extends Component {
                   >
                     <AccountCircle />
                   </IconButton>
+
                   <Menu
                     id="menu-appbar"
                     anchorEl={anchorEl}
@@ -100,8 +123,8 @@ class App extends Component {
                     open={open}
                     onClose={this.handleClose}
                   >
-                    <MenuItem containerElement={<NavLink to={"/"}/>}>Profile</MenuItem>
-                    <MenuItem containerElement={<NavLink to={'/signup'}/>}>SignUp</MenuItem>
+                    <MenuItem onClick={this.handleClose} component={NavLink} to="/">Profile</MenuItem>
+                    <MenuItem onClick={this.handleClose} component={NavLink} to="/logout">Logout</MenuItem>
                   </Menu>
                 </div>
               )}
