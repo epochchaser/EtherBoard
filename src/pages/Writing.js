@@ -1,22 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { EditorState } from 'draft-js';
 import { withStyles } from '@material-ui/core/styles';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-const styles = theme => ({
+const styles = ({
 });
 
 class Writing extends React.Component {
-    constructor(props) {
-        super(props);
-      }
+  state = {
+    editorState: EditorState.createEmpty(),
+  }
+
+  onEditorStateChange = (editorState) => {
+    this.setState({
+      editorState,
+    });
+  };
+
       render() {
+        const { editorState } = this.state;
+
         return (
             <Editor
-              toolbarClassName="toolbarClassName"
-              wrapperClassName="wrapperClassName"
-              editorClassName="editorClassName"
+              editorState={editorState}
+              wrapperClassName="demo-wrapper"
+              editorClassName="demo-editor"
               onEditorStateChange={this.onEditorStateChange}
             />
         );
