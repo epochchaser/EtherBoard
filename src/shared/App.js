@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import './App.css';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,6 +19,7 @@ import Login from "../components/Login";
 const styles = {
   root: {
     flexGrow: 1,
+    
   },
   flex: {
     flex: 1,
@@ -57,7 +57,7 @@ class App extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, web3 } = this.props;
     const { auth, anchorEl, openLogin } = this.state;
     const { handleLoginDialog } = this;
     const open = Boolean(anchorEl);

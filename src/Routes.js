@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Writing from './pages/Writing';
 import SignUp from './pages/SignUp';
+import Profile from './pages/Profile';
 
 class Routes extends Component {
   render() {
@@ -11,6 +12,7 @@ class Routes extends Component {
         <Route exact path='/' component={Home} />
         <Route exact path='/writing' component={Writing} />
         <Route exact path='/signup' component={SignUp} />
+        <Route exact path='/profile' component={Profile} />
         <Route render = { function() {
           return <h1>Not Found</h1>;
         }} />
