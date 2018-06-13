@@ -13,7 +13,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { NavLink } from 'react-router-dom';
 import Routes from '../Routes';
-
 import Login from "../components/Login";
 
 const styles = {
@@ -57,7 +56,7 @@ class App extends Component {
   }
 
   render() {
-    const { classes, web3 } = this.props;
+    const { classes } = this.props;
     const { auth, anchorEl, openLogin } = this.state;
     const { handleLoginDialog } = this;
     const open = Boolean(anchorEl);

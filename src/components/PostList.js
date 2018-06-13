@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
 import Post from './Post';
 
 const styles = theme => ({
@@ -17,7 +16,7 @@ class PostList extends Component{
       };
 
     render(){
-        const { classes, posts } = this.props;
+        const { posts } = this.props;
 
         return (
             <Grid container spacing={32} direction="column">

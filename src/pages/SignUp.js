@@ -1,172 +1,141 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import Web3 from 'web3';
 
 const styles = theme => ({
-  root: {
-    width: '90%',
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    minWidth: 200,
   },
   button: {
-    marginRight: theme.spacing.unit,
+    width: 200,
   },
-  instructions: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
-  },
+  input: {
+    display: 'none',
+  }
 });
 
-function getSteps() {
-  return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
-}
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return 'Select campaign settings...';
-    case 1:
-      return 'What is an ad group anyways?';
-    case 2:
-      return 'This is the bit I really care about!';
-    default:
-      return 'Unknown step';
-  }
-}
-
 class SignUp extends React.Component {
-  static propTypes = {
-    classes: PropTypes.object,
-  };
-
   state = {
-    activeStep: 0,
-    skipped: new Set(),
+    myAddress : '',
+    nickname : '',
+    email : '',
+    accountChecker : ''
   };
 
-  isStepOptional = step => {
-    return step === 1;
+  updateMyAddress = (address) => {
+    this.setState({
+      myAddress : address
+    });
   };
 
-  isStepSkipped(step) {
-    return this.state.skipped.has(step);
+  updateInterface = () =>{
+
   }
 
-  handleNext = () => {
-    const { activeStep } = this.state;
-    let { skipped } = this.state;
-    if (this.isStepSkipped(activeStep)) {
-      skipped = new Set(skipped.values());
-      skipped.delete(activeStep);
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
+  componentDidMount = () =>{
+    const { updateMyAddress, updateInterface } = this;
+    const { myAddress } = this.state;
+    let web3 = window.web3;
+
+    if (typeof web3 !== 'undefined') {
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-    this.setState({
-      activeStep: activeStep + 1,
-      skipped,
-    });
-  };
 
-  handleBack = () => {
-    const { activeStep } = this.state;
-    this.setState({
-      activeStep: activeStep - 1,
-    });
-  };
+    const id = setInterval(() => {
+      web3.eth.getAccounts((err,r) => {
+        if (!err) {
+          if (myAddress !== r[0]) {
+            updateMyAddress(r[0]);
+            updateInterface();
+          }
+        }else{
+          updateMyAddress('');
+          console.log(err);
+        }
+      })
+    }, 1000);
 
-  handleSkip = () => {
-    const { activeStep } = this.state;
-    if (!this.isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-    const skipped = new Set(this.state.skipped.values());
-    skipped.add(activeStep);
     this.setState({
-      activeStep: this.state.activeStep + 1,
-      skipped,
+      accountChecker : id
     });
-  };
+  }
 
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
-  };
+  componentWillUnmount = () =>{
+    console.log("cleared");
+    clearInterval(this.state.accountChecker);
+  }
 
   render() {
     const { classes } = this.props;
-    const steps = getSteps();
-    const { activeStep } = this.state;
-    console.log(window.web3);
+    const { myAddress } = this.state;
 
     return (
-      <div className={classes.root}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const props = {};
-            const labelProps = {};
-            if (this.isStepOptional(index)) {
-              labelProps.optional = <Typography variant="caption">Optional</Typography>;
-            }
-            if (this.isStepSkipped(index)) {
-              props.completed = false;
-            }
-            return (
-              <Step key={label} {...props}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
         <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-                All steps completed - you&quot;re finished
-              </Typography>
-              <Button onClick={this.handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                {this.isStepOptional(activeStep) && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleSkip}
-                    className={classes.button}
-                  >
-                    Skip
+          <Grid container spacing={32} direction="column">
+              <Grid container item spacing={0} justify="center" key={0}>
+                  <Grid item xs={8}>
+                    My address : {myAddress}            
+                  </Grid>
+              </Grid>
+
+              <Grid container item spacing={0} justify="center" key={1}>
+                <Grid item xs={8} >
+                  <form className={classes.container} noValidate autoComplete="off">
+                    <TextField
+                      id="nickname"
+                      label="Nickname"
+                      className={classes.textField}
+                      onChange={this.handleChange('nickname')}
+                      value={this.state.nickname}
+                      margin="normal"
+                    />
+
+                    <TextField
+                      id="email"
+                      label="Email"
+                      className={classes.textField}
+                      onChange={this.handleChange('email')}
+                      value={this.state.email}
+                      margin="normal"
+                    />
+                  </form>
+                </Grid>
+              </Grid>
+
+              <Grid container item spacing={0} justify="center" key={2}>
+                <Grid item xs={8} >
+                  <Button variant="contained" color="primary" className={classes.button}>
+                    Register
                   </Button>
-                )}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              </div>
-            </div>
-          )}
+                </Grid>
+              </Grid>
+            </Grid>
+          
         </div>
-      </div>
-    );
+      );
   }
 }
+
+SignUp.propTypes = {
+  classes: PropTypes.object,
+};
 
 export default withStyles(styles)(SignUp);
