@@ -7,6 +7,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Web3 from 'web3';
 
 
 const styles = theme => ({
@@ -23,8 +24,9 @@ class Writing extends React.Component {
     editorState: EditorState.createEmpty(),
   }
 
-  handleRegister = (data) =>{
+  handleRegister = (data) => {
     const { contractAddress, abi, onWritePostSuccess } = this.props;
+    
     let web3 = window.web3;
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
