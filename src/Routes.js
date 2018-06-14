@@ -10,7 +10,7 @@ class Routes extends Component {
       <Switch>
         <Route exact path='/' component={Home} />
         <Route exact path='/writing' component={Writing} />
-        <Route exact path='/profile' component={Profile} />
+        <Route exact path='/profile' component={Profile}/>
         <Route render = { function() {
           return <h1>Not Found</h1>;
         }} />

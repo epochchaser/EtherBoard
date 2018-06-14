@@ -1,4 +1,5 @@
 import React, { Component, createContext } from 'react';
+
 const Context = createContext(); 
 const { Provider, Consumer: Web3Consumer } = Context; 
 
@@ -185,10 +186,7 @@ class Web3Provider extends Component {
   }
 
   actions = {
-    onWritePostSuccess: () => {
-      //navigation
-
-      alert("context api타고왔음. '/'로 네비게이션 가자.");
+    someMethod : () => {
     }
   }
 
@@ -213,7 +211,6 @@ function withWeb3(WrappedComponent) {
             <WrappedComponent
               contractAddress={state.contractAddress}
               abi={state.abi}
-              onWritePostSuccess={actions.onWritePostSuccess}
             />
           )
         }
@@ -221,7 +218,6 @@ function withWeb3(WrappedComponent) {
     )
   }
 }
-
 
 export {
   Web3Provider,
