@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -16,26 +15,17 @@ class Login extends React.Component {
           onClose={this.props.onClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">LOGIN</DialogTitle>
+          <DialogTitle id="form-dialog-title">LOGIN INSTRUCTION</DialogTitle>
           <DialogContent>
+            
             <DialogContentText>
-              Welcome to the ethereum board!
+              To start, You need to log into MetaMask first.
+              You can install the MetaMask add-on in Chrome, Firefox, Opera, and the new Brave browser. 
             </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-            />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.props.onClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.props.onClose} color="primary">
-              Login
+              OK
             </Button>
           </DialogActions>
         </Dialog>

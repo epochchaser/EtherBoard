@@ -7,13 +7,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Button from "@material-ui/core/Button"
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import Create from "@material-ui/icons/Create";
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import { NavLink } from 'react-router-dom';
 import Routes from '../Routes';
 import Login from "../components/Login";
+import Web3 from 'web3';
+import Home from '@material-ui/icons/Home';
 
 const styles = {
   root: {
@@ -31,22 +30,23 @@ const styles = {
 
 class App extends Component {
   state = {
-    auth: true,
     anchorEl: null,
     openLogin : false,
+    myAddress : undefined,
+    accountChecker : ''
   };
 
-  handleChange = (event, checked) => {
-    this.setState({ auth: checked });
-  };
+  handleWritingRegister = (rawData) => {
+    const { myAddress } = this.state;
 
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
+    if(myAddress){
+      //여기 컨트랙트로 보내는 로직
+      console.log(rawData);
+    } else {
+      alert('You need to login to MetaMask first.');
+        return;	  
+    }
+  }
 
   handleLoginDialog = () => {
     this.setState({
@@ -55,37 +55,78 @@ class App extends Component {
     })
   }
 
+  updateMyAddress = (address) =>{
+    this.setState({
+      myAddress : address
+    })
+  }
+
+  componentDidMount = () =>{
+    const { updateMyAddress } = this;
+    let web3 = window.web3;
+
+    if (typeof web3 !== 'undefined') {
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    }
+
+    const id = setInterval(() => {
+      web3.eth.getAccounts((err,r) => {
+        if (!err) {
+          if (this.state.myAddress !== r[0]) {
+            updateMyAddress(r[0]);
+          }
+        }else{
+          updateMyAddress(undefined);
+        }
+      })
+    }, 1000);
+
+    this.setState({
+      accountChecker : id
+    });
+  }
+
+  componentWillUnmount = () =>{
+    clearInterval(this.state.accountChecker);
+  }
+
   render() {
     const { classes } = this.props;
-    const { auth, anchorEl, openLogin } = this.state;
+    const { myAddress, openLogin } = this.state;
     const { handleLoginDialog } = this;
-    const open = Boolean(anchorEl);
 
     return (
       <Router>
         <div className={classes.root}>
           <AppBar position="static">
             <Toolbar>
+              <IconButton
+                    component={NavLink}
+                    to="/"
+                    color="inherit"
+                >
+                <Home />
+              </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>
                 ETHEREUM BOARD
               </Typography>
 
-              <Button color="inherit" onClick={handleLoginDialog}>
-                LOGIN
-              </Button>
+
+              {typeof myAddress === 'undefined' 
+              ? (
+                  <Button color="inherit" onClick={handleLoginDialog}>
+                    LOGIN
+                  </Button>
+                )
+              : <div>Your address : {myAddress}</div>
+              }
 
               <Login
                 open={openLogin}
                 onClose={handleLoginDialog}
               />
-
-              <Button 
-                color="inherit" 
-                component={NavLink}
-                to="/signup"
-              >
-                SIGN UP
-              </Button>
 
               <div>
                 <IconButton
@@ -96,37 +137,6 @@ class App extends Component {
                   <Create />
                 </IconButton>
               </div>
-
-              {auth && (
-                <div>
-                  <IconButton
-                    aria-owns={open ? 'menu-appbar' : null}
-                    aria-haspopup="true"
-                    onClick={this.handleMenu}
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={open}
-                    onClose={this.handleClose}
-                  >
-                    <MenuItem onClick={this.handleClose} component={NavLink} to="/">Profile</MenuItem>
-                    <MenuItem onClick={this.handleClose} component={NavLink} to="/logout">Logout</MenuItem>
-                  </Menu>
-                </div>
-              )}
             </Toolbar>
           </AppBar>
 
