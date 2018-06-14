@@ -6,6 +6,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Web3 from 'web3';
 
 const styles = theme => ({
   button: {
@@ -19,9 +20,33 @@ const styles = theme => ({
 class Writing extends React.Component {
   state = {
     editorState: EditorState.createEmpty(),
+    address: undefined,
   }
 
-  handleRegister = (data) =>{
+  componentDidMount = () => {
+    let web3 = window.web3;
+
+    if (typeof web3 !== 'undefined') {
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    }
+
+    web3.eth.getAccounts((err,r) => {
+      if (!err && r.length > 0) {
+        this.state.address = r[0];
+      }
+
+      console.log(r);
+    });
+  }
+
+  handleRegister = (data) => {
+    if (!this.state.address) {
+      alert ('Please Login');
+      return;
+    }
+    
     var contractAddress = '0xf1f7516880f62732060a7ab78868807ab14c5ac7';
     var abi = [
       {
