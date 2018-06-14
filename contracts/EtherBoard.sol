@@ -15,9 +15,6 @@ contract EtherBoard is Ownable {
         uint timestamp;
     }
 
-    constructor(){
-    }
-
     function getPostsCount() public constant returns(uint) {
         return posts.length;
     }
@@ -26,7 +23,7 @@ contract EtherBoard is Ownable {
         return (posts[_index].data, posts[_index].like, posts[_index].unlike, posts[_index].kind, posts[_index].timestamp);
     }
 
-    function writePost(string _data, uint8 _kind) public onlyOwner {
+    function writePost(string _data, uint8 _kind) public {
 
         posts.push(Post(_data, 0, 0, _kind, now));
         emit WriteCallback(_data, _kind);
