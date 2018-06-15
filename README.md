@@ -3,20 +3,29 @@
 ## Required
 - react
 - truffle
+- web3
+- openzeppelin-solidity
+- metamask
 
 ## Install dependencies
 ```
-$ npm install
+$ npm install 
+$ or 
+$ yarn
 ```
 
 ## Run
 ```
 $ npm start
+$ or
+$ yarn start
 ```
 
 ## Build
 ```
 $ npm build
+$ or
+$ yarn build
 ```
 
 
@@ -34,3 +43,11 @@ $ npm install -g create-react-app
 ```
 $ npm install -g truffle
 ```
+
+
+### Environment Setting
+- [Ganache](http://truffleframework.com/ganache/)
+```
+$ truffle compile
+$ truffle migrate
+
