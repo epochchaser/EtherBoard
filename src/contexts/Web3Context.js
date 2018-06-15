@@ -8,6 +8,41 @@ class Web3Provider extends Component {
     contractAddress : '0xf1f7516880f62732060a7ab78868807ab14c5ac7',
     abi : [
       {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "posts",
+        "outputs": [
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "type": "string"
+          },
+          {
+            "name": "like",
+            "type": "uint32"
+          },
+          {
+            "name": "unlike",
+            "type": "uint32"
+          },
+          {
+            "name": "kind",
+            "type": "uint8"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "constant": false,
         "inputs": [],
         "name": "renounceOwnership",
@@ -64,14 +99,13 @@ class Web3Provider extends Component {
         "type": "function"
       },
       {
-        "inputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-      },
-      {
         "anonymous": false,
         "inputs": [
+          {
+            "indexed": false,
+            "name": "_title",
+            "type": "string"
+          },
           {
             "indexed": false,
             "name": "_data",
@@ -133,12 +167,16 @@ class Web3Provider extends Component {
         "constant": true,
         "inputs": [
           {
-            "name": "_index",
+            "name": "index",
             "type": "uint256"
           }
         ],
         "name": "getPost",
         "outputs": [
+          {
+            "name": "",
+            "type": "string"
+          },
           {
             "name": "",
             "type": "string"
@@ -154,10 +192,6 @@ class Web3Provider extends Component {
           {
             "name": "",
             "type": "uint8"
-          },
-          {
-            "name": "",
-            "type": "uint256"
           }
         ],
         "payable": false,
@@ -167,6 +201,10 @@ class Web3Provider extends Component {
       {
         "constant": false,
         "inputs": [
+          {
+            "name": "_title",
+            "type": "string"
+          },
           {
             "name": "_data",
             "type": "string"

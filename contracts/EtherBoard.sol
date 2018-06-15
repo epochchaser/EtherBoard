@@ -1,31 +1,38 @@
 pragma solidity ^0.4.23;
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 contract EtherBoard is Ownable {
     mapping(uint => address) public postIdToOwner;
-    Post[] posts;
-
-    event WriteCallback(string _data, uint8 _kind);
-    struct Post{
+    Post[] public posts;
+ 
+    event WriteCallback(string _title, string _data, uint8 _kind);
+    
+    struct Post {
+        string title;
         string data;
         uint32 like;
         uint32 unlike;
         uint8 kind;
-        uint timestamp;
     }
 
-    function getPostsCount() public constant returns(uint) {
+    function getPostsCount() public view returns(uint) {
         return posts.length;
     }
 
-    function getPost(uint _index) public constant returns(string, uint32, uint32, uint8, uint) {
-        return (posts[_index].data, posts[_index].like, posts[_index].unlike, posts[_index].kind, posts[_index].timestamp);
+    function getPost(uint index) public view returns(string, string, uint32, uint32, uint8) {
+        return (
+            posts[index].title,
+            posts[index].data,
+            posts[index].like,
+            posts[index].unlike,
+            posts[index].kind
+        );
     }
 
-    function writePost(string _data, uint8 _kind) public {
+    function writePost(string _title, string _data, uint8 _kind) public {
 
-        posts.push(Post(_data, 0, 0, _kind, now));
-        emit WriteCallback(_data, _kind);
+        posts.push(Post(_title, _data, 0, 0, _kind));
+        emit WriteCallback(_title, _data, _kind);
     }
 }

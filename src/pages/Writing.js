@@ -4,9 +4,11 @@ import { Redirect } from 'react-router-dom';
 import { withWeb3 } from '../contexts/Web3Context';
 import { withStyles } from '@material-ui/core/styles';
 import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   button: {
@@ -20,7 +22,8 @@ const styles = theme => ({
 class Writing extends React.Component {
   state = {
     writingSuccess : false,
-    contentState : '',
+    editorState : EditorState.createEmpty(),
+    title : ''
   }
 
   setWritingSuccess = (value) =>{
@@ -29,24 +32,25 @@ class Writing extends React.Component {
     })
   }
 
-  handleRegister = (data) => {
+  handleRegister = (title, data) => {
     const { contractAddress, abi } = this.props;
     const { setWritingSuccess } = this;
     let web3 = window.web3;
+
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
     
-    etherBoard.writePost(data, 0, function(err,r){
+    etherBoard.writePost(title, data, 0, function(err,r){
       if(!err){
         const writeCallback = etherBoard.WriteCallback();
         writeCallback.watch(function(err ,r){
           if(!err){
             setWritingSuccess(true);
-            alert('successfuly written on blockchain.');
+            //alert('successfuly written on blockchain.');
           }
           else{
             setWritingSuccess(false);
-            alert('there is problem to register post.');
+            //alert('there is problem to register post.');
           }
 
           //writeCallback.stopWatching();
@@ -55,35 +59,53 @@ class Writing extends React.Component {
     });
   }
 
-  onContentStateChange = (contentState) => {
+  onEditorStateChange = (editorState) => {
     this.setState({
-      contentState : contentState,
+      editorState : editorState,
+    });
+  };
+
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
     });
   };
 
       render() {
         const { classes } = this.props;
-        const { contentState } = this.state;
-        const { handleRegister } = this;
+        const { editorState, title } = this.state;
+        const { handleRegister, onEditorStateChange } = this;
 
         return (
           this.state.writingSuccess 
           ? <Redirect to="/"/>
           :
           <Grid container spacing={32} direction="column">
-            <Grid container item spacing={0} justify="center" key={0}>
+          <Grid container item spacing={0} justify="center" key={0}>
+              <Grid item xs={8}>
+              <TextField id="title" label="Title" InputLabelProps={{shrink: true,}}
+                placeholder="Title"
+                helperText="Please type your title."
+                fullWidth
+                onChange={this.handleChange('title')}
+                margin="normal"/>
+              </Grid>
+            </Grid>
+
+            <Grid container item spacing={0} justify="center" key={1}>
                 <Grid item xs={8}>
                       <Editor 
+                        editorState={editorState}
                         wrapperClassName="demo-wrapper"
                         editorClassName="demo-editor"
-                        onContentStateChange={this.onContentStateChange}
+                        onEditorStateChange={onEditorStateChange}
                       />
                 </Grid>
             </Grid>
       
-            <Grid container item spacing={0} justify="center" key={1}>
+            <Grid container item spacing={0} justify="center" key={2}>
                 <Grid item xs={8}>
-                  <Button variant="contained" color="primary" className={classes.button} onClick={() => handleRegister(JSON.stringify(contentState, null, 4))}>
+                  <Button variant="contained" color="primary" className={classes.button} onClick={() => handleRegister(title, JSON.stringify(convertToRaw(editorState.getCurrentContent())))}>
                       Register
                   </Button>
                 </Grid>
