@@ -23,7 +23,7 @@ class Writing extends React.Component {
   state = {
     writingSuccess : false,
     editorState : EditorState.createEmpty(),
-    title : ''
+    title : '',
   }
 
   setWritingSuccess = (value) =>{
@@ -39,22 +39,21 @@ class Writing extends React.Component {
 
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
-    
-    etherBoard.writePost(title, data, 0, function(err,r){
-      if(!err){
-        const writeCallback = etherBoard.WriteCallback();
-        writeCallback.watch(function(err ,r){
-          if(!err){
-            setWritingSuccess(true);
-            //alert('successfuly written on blockchain.');
-          }
-          else{
-            setWritingSuccess(false);
-            //alert('there is problem to register post.');
-          }
 
-          //writeCallback.stopWatching();
-        });
+    etherBoard.writePost(title, data, 0, (err, res) =>{
+      if(!err){
+        const txHash = res;
+        const filter = web3.eth.filter('latest')
+        
+        filter.watch(function(err, r) {
+          web3.eth.getTransaction(txHash, function(e,r){
+            if (r != null && r.blockNumber > 0) {
+              console.log(`txHash : ${txHash}, bnumber : ${r.blockNumber}`);
+              //filter.stopWatching();
+              setWritingSuccess(true);
+            }
+          });
+        });    
       }
     });
   }
