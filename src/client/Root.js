@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import App from '../shared/App';
-import { Web3Provider } from '../contexts/Web3Context';
+import { RootProvider } from '../contexts/RootContext';
 
 const AppProvider = ({ contexts, children }) => contexts.reduce(
     (prev, context) => React.createElement(context, {
@@ -13,7 +13,7 @@ const AppProvider = ({ contexts, children }) => contexts.reduce(
 class Root extends Component{
     render(){
         return(
-            <AppProvider contexts={[Web3Provider]}>
+            <AppProvider contexts={[RootProvider]}>
                 <BrowserRouter>
                     <App/>
                 </BrowserRouter>

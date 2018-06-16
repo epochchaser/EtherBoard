@@ -1,5 +1,9 @@
-var EtherBoard = artifacts.require("./EtherBoard.sol");
+var BoardPost = artifacts.require("./BoardPost.sol");
+var BoardReply = artifacts.require("./BoardReply.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(EtherBoard);
+  deployer.deploy(BoardPost)
+  .then(function() {
+    return deployer.deploy(BoardReply, BoardPost.address);
+  });
 };

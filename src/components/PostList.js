@@ -16,7 +16,8 @@ class PostList extends Component{
       };
 
     render(){
-        const { posts } = this.props;
+        const { posts, contractAddress, abi, setLike, setDislike } = this.props;
+        console.log(`cadd : ${contractAddress},  setDislike : ${setLike}`);
 
         return (
             <Grid container spacing={32} direction="column">
@@ -24,7 +25,16 @@ class PostList extends Component{
                     posts.map(post => (
                         <Grid container item spacing={0} justify="center" key={post.id}>
                             <Grid item xs={8}>
-                                <Post title={post.title} content={post.content} like={post.like} unlike={post.unlike}/>    
+                                <Post 
+                                    id={post.id} 
+                                    title={post.title} 
+                                    content={post.content} 
+                                    like={post.like} 
+                                    dislike={post.dislike}
+                                    contractAddress={contractAddress}
+                                    abi={abi}
+                                    setLike={setLike}
+                                    setDislike={setDislike}/>    
                             </Grid>
                         </Grid>
                     ))

@@ -43,15 +43,77 @@ const styles = theme => ({
   });
 
 class Post extends Component {
-    state = { expanded: false };
+  state = {
+    expanded: false,
+  }
 
   handleExpandClick = () => {
     this.setState({ expanded: !this.state.expanded });
   };
 
+  handleLikeClick = () => {
+    const { contractAddress, abi, id, setLike } = this.props;
+    let web3 = window.web3;
+    const ehterBoardContract = web3.eth.contract(abi);
+    const etherBoard = ehterBoardContract.at(contractAddress);
+    const filter = web3.eth.filter('latest')
+
+    etherBoard.likePost(id, (err, res) =>{
+      if(!err){
+        const txHash = res;
+        filter.watch(function(err1, res1) {
+          web3.eth.getTransaction(txHash, function(err2,res2){
+            if (res2 != null && res2.blockNumber > 0) {
+              
+              const onLikedEvent = etherBoard.OnLiked({},{fromBlock: res2.blockNumber, toBlock: 'latest'});
+              onLikedEvent.get((err3, res3) => {
+                if (!err3){
+                  for (let i = 0; i < res3.length; i++) { 
+                    setLike(id, res3[i].args.count.toNumber());
+                  }
+                }
+              })
+            }
+          });
+        });    
+      }
+    });
+  }
+
+  handleDislikeClick = () => {
+    const { contractAddress, abi, id, setDislike } = this.props;
+    let web3 = window.web3;
+    const ehterBoardContract = web3.eth.contract(abi);
+    const etherBoard = ehterBoardContract.at(contractAddress);
+    const filter = web3.eth.filter('latest')
+
+    console.log(setDislike);
+
+    etherBoard.dislikePost(id, (err, res) =>{
+      if(!err){
+        const txHash = res;
+        filter.watch(function(err1, res1) {
+          web3.eth.getTransaction(txHash, function(err2,res2){
+            if (res2 != null && res2.blockNumber > 0) {
+              
+              const onDislikedEvent = etherBoard.OnDisliked({},{fromBlock: res2.blockNumber, toBlock: 'latest'});
+              onDislikedEvent.get((err3, res3) => {
+                if (!err3){
+                  for (let i = 0; i < res3.length; i++) { 
+                    setDislike(id, res3[i].args.count.toNumber());
+                  }
+                }
+              })
+            }
+          });
+        });    
+      }
+    });
+  }
+
   render() {
-    const { classes, title, content, like, unlike } = this.props;
-    console.log(like);
+    const { classes, title, content, like, dislike } = this.props;
+    console.log(`title : ${title}, content : ${content}`);
 
     return (
       <div>
@@ -70,14 +132,14 @@ class Post extends Component {
             
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton aria-label="like">
+            <IconButton aria-label="like" onClick={this.handleLikeClick}>
               <ThumbUpIcon />
             </IconButton>
             <span>{like}</span>
-            <IconButton aria-label="unlike">
+            <IconButton aria-label="dislike" onClick={this.handleDislikeClick}>
               <ThumbDownIcon />
             </IconButton>
-            <span>{unlike}</span>
+            <span>{dislike}</span>
             <IconButton
               className={classnames(classes.expand, {
                 [classes.expandOpen]: this.state.expanded,
