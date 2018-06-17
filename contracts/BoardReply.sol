@@ -4,28 +4,25 @@ import "./BoardPost.sol";
 contract BoardReply is BoardPost {
     event OnReplied(string _title, uint _postId);
     
-    uint public replyCounter;
-    mapping(uint => address) public replyIdToOwner;
-    mapping(uint => uint) public replyIdToPostId;
-    Reply[] public replies;
+    mapping(uint => Reply[]) postIdToReplies;
 
     struct Reply {
+        address sender;
         string data;
     }
 
-    function getReplyCount() public view returns(uint) {
+    function getReply(uint _postId, uint _index) public view validateId(_postId) returns(string) {
+        Reply[] memory replies = postIdToReplies[_postId];
+        return (replies[_index].data);
+    }
+
+    function getReplyCount(uint _postId) public view validateId(_postId) returns(uint){
+        Reply[] memory replies = postIdToReplies[_postId];
         return replies.length;
     }
 
-    function getReply(uint _index) public view returns(string) {
-        return replies[_index].data;
-    }
-
     function writeReply(uint _postId, string _data) public validateId(_postId) {
-        replyIdToOwner[replyCounter] = msg.sender;
-        replyIdToPostId[replyCounter] = _postId;
-        replies.push(Reply(_data));
-        replyCounter++;
+        postIdToReplies[_postId].push(Reply(msg.sender, _data));
         emit OnReplied(_data, _postId);
     }
 }

@@ -10,21 +10,29 @@ class Home extends Component {
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
     
-    etherBoard.getPostsCount((err, r) => {
+    etherBoard.getPostsCount((err, res) => {
         let newPosts = [];
-        const count = r.toNumber();
+        const count = res.toNumber();
         
         for(let i = 0; i < count; i++){
-          etherBoard.getPost(i , function(err, r) {
-            const title = String(r[0]);
-            const content = draftToHtml(JSON.parse(String(r[1])));
-            const like = parseInt(r[2], 10);
-            const dislike = parseInt(r[3], 10);
+          etherBoard.getPost(i , (err1, res1) => {
+            if(!err1){
+              
+              const title = String(res1[0]);
+              const content = draftToHtml(JSON.parse(String(res1[1])));
+              const like = parseInt(res1[2], 10);
+              const dislike = parseInt(res1[3], 10);
 
-            newPosts.push({id : i, title: title, content: content, like: like, dislike: dislike});
+              etherBoard.getReplyCount(i , (err2, res2) => {
+                if(!err2){
+                  const repliesCount = res2.toNumber();
+                  newPosts.push({id : i, title: title, content: content, like: like, dislike: dislike, replies: [], repliesCount: repliesCount});
 
-            if(i === count - 1){
-              setPosts(newPosts);
+                  if(i === count - 1){
+                    setPosts(newPosts);
+                  }
+                }
+              });
             }
           });
         }
@@ -40,7 +48,7 @@ class Home extends Component {
   }
 
   render() {
-    const { posts, contractAddress, abi, setLike, setDislike } = this.props;
+    const { posts, contractAddress, abi, setLike, setDislike, setReplies } = this.props;
 
     return (
         <div>
@@ -49,7 +57,8 @@ class Home extends Component {
             contractAddress={contractAddress}
             abi={abi}
             setLike={setLike}
-            setDislike={setDislike}/>
+            setDislike={setDislike}
+            setReplies={setReplies}/>
         </div>
     );
   }

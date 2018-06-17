@@ -297,7 +297,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 177,
-        "sourceUnit": 410,
+        "sourceUnit": 418,
         "src": "26:63:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -311,10 +311,10 @@
               "id": 3,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 409,
+              "referencedDeclaration": 417,
               "src": "117:7:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$409",
+                "typeIdentifier": "t_contract$_Ownable_$417",
                 "typeString": "contract Ownable"
               }
             },
@@ -324,7 +324,7 @@
           }
         ],
         "contractDependencies": [
-          409
+          417
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -332,7 +332,7 @@
         "id": 176,
         "linearizedBaseContracts": [
           176,
-          409
+          417
         ],
         "name": "BoardPost",
         "nodeType": "ContractDefinition",
@@ -1289,7 +1289,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 424,
+                        "referencedDeclaration": 432,
                         "src": "945:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -2414,10 +2414,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        427,
-                        428
+                        435,
+                        436
                       ],
-                      "referencedDeclaration": 427,
+                      "referencedDeclaration": 435,
                       "src": "1474:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2523,7 +2523,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 177,
-        "sourceUnit": 410,
+        "sourceUnit": 418,
         "src": "26:63:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2537,10 +2537,10 @@
               "id": 3,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 409,
+              "referencedDeclaration": 417,
               "src": "117:7:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$409",
+                "typeIdentifier": "t_contract$_Ownable_$417",
                 "typeString": "contract Ownable"
               }
             },
@@ -2550,7 +2550,7 @@
           }
         ],
         "contractDependencies": [
-          409
+          417
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -2558,7 +2558,7 @@
         "id": 176,
         "linearizedBaseContracts": [
           176,
-          409
+          417
         ],
         "name": "BoardPost",
         "nodeType": "ContractDefinition",
@@ -3515,7 +3515,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 424,
+                        "referencedDeclaration": 432,
                         "src": "945:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -4640,10 +4640,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        427,
-                        428
+                        435,
+                        436
                       ],
-                      "referencedDeclaration": 427,
+                      "referencedDeclaration": 435,
                       "src": "1474:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -4735,5 +4735,5 @@
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-16T08:49:20.664Z"
+  "updatedAt": "2018-06-17T09:17:12.715Z"
 }

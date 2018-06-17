@@ -8,11 +8,16 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
+import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import red from '@material-ui/core/colors/red';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Grid from '@material-ui/core/Grid';
+import Reply from './Reply';
+import { Button } from '@material-ui/core';
+import ReplyList from './ReplyList';
 
 const styles = theme => ({
     root: {
@@ -27,6 +32,9 @@ const styles = theme => ({
     actions: {
       display: 'flex',
     },
+    repliesCount:{
+      marginLeft: 'auto',
+    },
     expand: {
       transform: 'rotate(0deg)',
       transition: theme.transitions.create('transform', {
@@ -40,14 +48,90 @@ const styles = theme => ({
     avatar: {
       backgroundColor: red[500],
     },
+    button: {
+      margin: theme.spacing.unit,
+    },
+    textField: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: 200,
+    },
   });
 
 class Post extends Component {
   state = {
     expanded: false,
+    commentOnEdit : ''
+  }
+
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
+  registerComment = (comment) => {
+    const { contractAddress, abi, setReplies, id } = this.props;
+    let web3 = window.web3;
+    const ehterBoardContract = web3.eth.contract(abi);
+    const etherBoard = ehterBoardContract.at(contractAddress);
+    let newReplies = [];
+
+    etherBoard.writeReply(id, comment, (err, res) =>{
+      if(!err){
+        etherBoard.getReplyCount(id , (err2, res2) => {
+          if(!err2){
+            const repliesCount = res2.toNumber();
+
+            for(let i = 0; i < repliesCount; i++){
+              etherBoard.getReply(id, i, (err3, res3) => {
+                  if(!err3){
+                    const content = String(res3[0]);
+                    newReplies.push({content : content});
+
+                    if(i === repliesCount - 1){
+                      setReplies(id, newReplies);
+                    }
+                  }
+              });
+            }
+          }
+        });
+      }
+    });
   }
 
   handleExpandClick = () => {
+    const { expanded } = this.state;
+    const { contractAddress, abi, setReplies, id } = this.props;
+    let web3 = window.web3;
+    const ehterBoardContract = web3.eth.contract(abi);
+    const etherBoard = ehterBoardContract.at(contractAddress);
+
+    if(true === expanded){
+      setReplies(id, []);
+    }else{
+      let newReplies = [];
+
+      etherBoard.getReplyCount(id, (err, res) =>{
+        if(!err){
+          const repliesCount = res.toNumber();
+          for(let i = 0; i < repliesCount; i++){
+            etherBoard.getReply(id, i , (err1, res1) => {
+              if(!err1){
+                const content = String(res1[0]);
+                newReplies.push({content: content});
+                  
+                if(i === repliesCount - 1){
+                  setReplies(id, newReplies);
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+
     this.setState({ expanded: !this.state.expanded });
   };
 
@@ -87,8 +171,6 @@ class Post extends Component {
     const etherBoard = ehterBoardContract.at(contractAddress);
     const filter = web3.eth.filter('latest')
 
-    console.log(setDislike);
-
     etherBoard.dislikePost(id, (err, res) =>{
       if(!err){
         const txHash = res;
@@ -112,9 +194,10 @@ class Post extends Component {
   }
 
   render() {
-    const { classes, title, content, like, dislike } = this.props;
-    console.log(`title : ${title}, content : ${content}`);
-
+    const { classes, title, content, like, dislike, replies, repliesCount } = this.props;
+    const { contractAddress, abi } = this.props;
+    const { registerComment, handleChange } = this;
+    
     return (
       <div>
         <Card className={classes.card}>
@@ -140,6 +223,7 @@ class Post extends Component {
               <ThumbDownIcon />
             </IconButton>
             <span>{dislike}</span>
+            <span className={classes.repliesCount}>{repliesCount} replies</span>
             <IconButton
               className={classnames(classes.expand, {
                 [classes.expandOpen]: this.state.expanded,
@@ -153,7 +237,35 @@ class Post extends Component {
           </CardActions>
           <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
             <CardContent>
-              이부분에 댓글들 가즈아!!!!!!!!!!!!!!!!!!!!!!!!!!
+              <Grid container spacing={32} direction="row">
+                <Grid container item spacing={0}>
+                  <Grid item xs={8}>
+                    <TextField
+                      id="commentOnEdit"
+                      label="Type your Comment here."
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      onChange={handleChange('commentOnEdit')}
+                      placeholder="Comment"
+                      helperText=" "
+                      fullWidth
+                      margin="normal"
+                    />
+                  </Grid>
+                </Grid>
+
+
+                <ReplyList replies={replies}/>
+
+                <Grid container item spacing={0}>
+                  <Grid item xs={2}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={() => registerComment(this.state.commentOnEdit)}>
+                      REGISTER
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
             </CardContent>
           </Collapse>
         </Card>

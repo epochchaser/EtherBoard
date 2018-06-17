@@ -65,7 +65,6 @@ class Writing extends React.Component {
         filter.watch(function(err, r) {
           web3.eth.getTransaction(txHash, function(e,r){
             if (r != null && r.blockNumber > 0) {
-              console.log(`txHash : ${txHash}, blockNumber : ${r.blockNumber}`);
               setLoading(false);
               setWritingSuccess(true);
             }
