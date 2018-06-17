@@ -5,51 +5,28 @@ const { Provider, Consumer: RootConsumer } = Context;
 
 class RootProvider extends Component {
   state = {
-    contractAddress : '0xde612d976d143754bc9f82f7e142c70d12aed174',
+    contractAddress : '0x3227bf316f7828654a17b5052a997cc644a96ff7',
     abi : [
       {
-        "constant": true,
-        "inputs": [],
-        "name": "postCounter",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
+        "constant": false,
         "inputs": [
           {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "name": "posts",
-        "outputs": [
+            "name": "_sender",
+            "type": "address"
+          },
           {
-            "name": "title",
+            "name": "_title",
             "type": "string"
           },
           {
-            "name": "data",
+            "name": "_content",
             "type": "string"
-          },
-          {
-            "name": "like",
-            "type": "uint32"
-          },
-          {
-            "name": "dislike",
-            "type": "uint32"
           }
         ],
+        "name": "writePost",
+        "outputs": [],
         "payable": false,
-        "stateMutability": "view",
+        "stateMutability": "nonpayable",
         "type": "function"
       },
       {
@@ -85,16 +62,11 @@ class RootProvider extends Component {
       },
       {
         "constant": false,
-        "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": false,
         "inputs": [
+          {
+            "name": "_sender",
+            "type": "address"
+          },
           {
             "name": "_index",
             "type": "uint256"
@@ -107,24 +79,42 @@ class RootProvider extends Component {
         "type": "function"
       },
       {
-        "constant": false,
+        "constant": true,
         "inputs": [
           {
-            "name": "_index",
+            "name": "_postIndex",
             "type": "uint256"
           }
         ],
-        "name": "dislikePost",
-        "outputs": [],
+        "name": "existPost",
+        "outputs": [
+          {
+            "name": "isExist",
+            "type": "bool"
+          }
+        ],
         "payable": false,
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
         "type": "function"
       },
       {
         "constant": true,
-        "inputs": [],
-        "name": "getPostsCount",
+        "inputs": [
+          {
+            "name": "_userAddress",
+            "type": "address"
+          }
+        ],
+        "name": "getUser",
         "outputs": [
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
           {
             "name": "",
             "type": "uint256"
@@ -136,17 +126,8 @@ class RootProvider extends Component {
       },
       {
         "constant": false,
-        "inputs": [
-          {
-            "name": "_title",
-            "type": "string"
-          },
-          {
-            "name": "_data",
-            "type": "string"
-          }
-        ],
-        "name": "writePost",
+        "inputs": [],
+        "name": "renounceOwnership",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -168,17 +149,45 @@ class RootProvider extends Component {
       },
       {
         "constant": true,
-        "inputs": [
+        "inputs": [],
+        "name": "getUserCount",
+        "outputs": [
           {
             "name": "",
             "type": "uint256"
           }
         ],
-        "name": "postIdToOwner",
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "getPostCount",
         "outputs": [
           {
             "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_userAddress",
             "type": "address"
+          }
+        ],
+        "name": "existUser",
+        "outputs": [
+          {
+            "name": "isExist",
+            "type": "bool"
           }
         ],
         "payable": false,
@@ -200,19 +209,53 @@ class RootProvider extends Component {
         "type": "function"
       },
       {
-        "anonymous": false,
+        "constant": false,
         "inputs": [
           {
-            "indexed": false,
-            "name": "_title",
-            "type": "string"
+            "name": "_sender",
+            "type": "address"
           },
           {
-            "indexed": false,
-            "name": "_postId",
+            "name": "_index",
             "type": "uint256"
           }
         ],
+        "name": "dislikePost",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_userIndex",
+            "type": "uint256"
+          }
+        ],
+        "name": "getUserByIndex",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "anonymous": false,
+        "inputs": [],
         "name": "OnReplied",
         "type": "event"
       },
@@ -226,7 +269,7 @@ class RootProvider extends Component {
           },
           {
             "indexed": false,
-            "name": "_data",
+            "name": "_content",
             "type": "string"
           }
         ],
@@ -298,11 +341,50 @@ class RootProvider extends Component {
             "type": "uint256"
           }
         ],
-        "name": "getReply",
+        "name": "getReplyFromPost",
         "outputs": [
           {
             "name": "",
             "type": "string"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_replyId",
+            "type": "uint256"
+          },
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getReplyFromReply",
+        "outputs": [
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint32"
           }
         ],
         "payable": false,
@@ -317,7 +399,26 @@ class RootProvider extends Component {
             "type": "uint256"
           }
         ],
-        "name": "getReplyCount",
+        "name": "getReplyCountFromPost",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_replyId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getReplyCountFromReply",
         "outputs": [
           {
             "name": "",
@@ -332,15 +433,41 @@ class RootProvider extends Component {
         "constant": false,
         "inputs": [
           {
+            "name": "_sender",
+            "type": "address"
+          },
+          {
             "name": "_postId",
             "type": "uint256"
           },
           {
-            "name": "_data",
+            "name": "_content",
             "type": "string"
           }
         ],
-        "name": "writeReply",
+        "name": "writeReplyToPost",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_sender",
+            "type": "address"
+          },
+          {
+            "name": "_replyId",
+            "type": "uint256"
+          },
+          {
+            "name": "_content",
+            "type": "string"
+          }
+        ],
+        "name": "writeReplyToReply",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -351,7 +478,7 @@ class RootProvider extends Component {
   }
 
   actions = {
-    setLike : (id, like) => {
+    setLikeToPost : (id, like) => {
       const { posts } = this.state;
       const modifiedPosts = posts.map(item => item.id === id
         ? ({ ...item, like: like }) 
@@ -362,7 +489,7 @@ class RootProvider extends Component {
         });
     },
 
-    setDislike : (id, dislike) => {
+    setDislikeToPost : (id, dislike) => {
       const { posts } = this.state;
       const modifiedPosts = posts.map(item => item.id === id
         ? ({ ...item, dislike: dislike }) 
@@ -379,7 +506,7 @@ class RootProvider extends Component {
       })
     },
 
-    setReplies : (postId, replies) => {
+    setRepliesToPost : (postId, replies) => {
       const { posts } = this.state;
      
       const modifiedPosts = posts.map(post => post.id === postId
@@ -414,10 +541,10 @@ function withRoot(WrappedComponent) {
               contractAddress={state.contractAddress}
               abi={state.abi}
               posts={state.posts}
-              setLike={actions.setLike}
-              setDislike={actions.setDislike}
               setPosts={actions.setPosts}
-              setReplies={actions.setReplies}
+              setLikeToPost={actions.setLikeToPost}
+              setDislikeToPost={actions.setDislikeToPost}
+              setRepliesToPost={actions.setRepliesToPost}
             />
           )
         }

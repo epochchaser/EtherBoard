@@ -71,59 +71,92 @@ class Post extends Component {
   };
 
   registerComment = (comment) => {
-    const { contractAddress, abi, setReplies, id } = this.props;
+    const { contractAddress, abi, setRepliesToPost, id } = this.props;
     let web3 = window.web3;
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
+    const filter = web3.eth.filter('latest')
     let newReplies = [];
 
-    etherBoard.writeReply(id, comment, (err, res) =>{
+    web3.eth.getAccounts((err, res) => {
       if(!err){
-        etherBoard.getReplyCount(id , (err2, res2) => {
-          if(!err2){
-            const repliesCount = res2.toNumber();
+        if(res.length === 0)return;
 
-            for(let i = 0; i < repliesCount; i++){
-              etherBoard.getReply(id, i, (err3, res3) => {
-                  if(!err3){
-                    const content = String(res3[0]);
-                    newReplies.push({content : content});
+        etherBoard.writeReplyToPost(res[0], id, comment, (err1, res1) =>{
+          if(!err1){
+            const txHash = res1;
 
-                    if(i === repliesCount - 1){
-                      setReplies(id, newReplies);
-                    }
+            filter.watch(function(err2, res2) {
+              if(!err2){
+                web3.eth.getTransaction(txHash, function(err3, res3){
+                  if (res3 != null && res3.blockNumber > 0) {
+                    etherBoard.getReplyCountFromPost(id , (err4, res4) => {
+                      if(!err4){
+                        const repliesCount = res4.toNumber();
+            
+                        for(let i = 0; i < repliesCount; i++){
+                          etherBoard.getReplyFromPost(id, i, (err5, res5) => {
+                              if(!err5){
+                                const content = String(res5[0]);
+                                const like = parseInt(res5[1], 10);
+                                const dislike = parseInt(res5[2], 10);
+                                newReplies.push(
+                                  {
+                                    content : content,
+                                    like : like,
+                                    dislike : dislike
+                                  });
+            
+                                if(i === repliesCount - 1){
+                                  console.log(newReplies);
+                                  setRepliesToPost(id, newReplies);
+                                }
+                              }
+                          });
+                        }
+                      }
+                    });        
                   }
-              });
-            }
+                });
+              }
+            });    
           }
         });
       }
     });
+    
   }
 
   handleExpandClick = () => {
     const { expanded } = this.state;
-    const { contractAddress, abi, setReplies, id } = this.props;
+    const { contractAddress, abi, setRepliesToPost, id } = this.props;
     let web3 = window.web3;
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
 
     if(true === expanded){
-      setReplies(id, []);
+      setRepliesToPost(id, []);
     }else{
       let newReplies = [];
 
-      etherBoard.getReplyCount(id, (err, res) =>{
+      etherBoard.getReplyCountFromPost(id, (err, res) =>{
         if(!err){
           const repliesCount = res.toNumber();
           for(let i = 0; i < repliesCount; i++){
-            etherBoard.getReply(id, i , (err1, res1) => {
+            etherBoard.getReplyFromPost(id, i , (err1, res1) => {
               if(!err1){
                 const content = String(res1[0]);
-                newReplies.push({content: content});
+                const like = parseInt(res1[1], 10);
+                const dislike = parseInt(res1[2], 10);
+                newReplies.push(
+                  {
+                    content : content,
+                    like : like,
+                    dislike : dislike
+                  });
                   
                 if(i === repliesCount - 1){
-                  setReplies(id, newReplies);
+                  setRepliesToPost(id, newReplies);
                 }
               }
             });
@@ -136,60 +169,74 @@ class Post extends Component {
   };
 
   handleLikeClick = () => {
-    const { contractAddress, abi, id, setLike } = this.props;
+    const { contractAddress, abi, id, setLikeToPost } = this.props;
     let web3 = window.web3;
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
     const filter = web3.eth.filter('latest')
 
-    etherBoard.likePost(id, (err, res) =>{
+    web3.eth.getAccounts((err, res) => {
       if(!err){
-        const txHash = res;
-        filter.watch(function(err1, res1) {
-          web3.eth.getTransaction(txHash, function(err2,res2){
-            if (res2 != null && res2.blockNumber > 0) {
-              
-              const onLikedEvent = etherBoard.OnLiked({},{fromBlock: res2.blockNumber, toBlock: 'latest'});
-              onLikedEvent.get((err3, res3) => {
-                if (!err3){
-                  for (let i = 0; i < res3.length; i++) { 
-                    setLike(id, res3[i].args.count.toNumber());
+        if(res.length === 0)return;
+
+        etherBoard.likePost(res[0], id, (err1, res1) =>{
+          if(!err1){
+            const txHash = res1;
+            filter.watch(function(err2, res2) {
+              if(!err2){
+                web3.eth.getTransaction(txHash, function(err3,res3){
+                  if (res3 != null && res3.blockNumber > 0) {
+                    
+                    const onLikedEvent = etherBoard.OnLiked({},{fromBlock: res3.blockNumber, toBlock: 'latest'});
+                    onLikedEvent.get((err4, res4) => {
+                      if (!err4){
+                        for (let i = 0; i < res4.length; i++) { 
+                          setLikeToPost(id, res4[i].args.count.toNumber());
+                        }
+                      }
+                    })
                   }
-                }
-              })
-            }
-          });
-        });    
+                });
+              }
+            });    
+          }
+        });
       }
     });
   }
 
   handleDislikeClick = () => {
-    const { contractAddress, abi, id, setDislike } = this.props;
+    const { contractAddress, abi, id, setDislikeToPost } = this.props;
     let web3 = window.web3;
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
     const filter = web3.eth.filter('latest')
 
-    etherBoard.dislikePost(id, (err, res) =>{
+    web3.eth.getAccounts((err, res) => {
       if(!err){
-        const txHash = res;
-        filter.watch(function(err1, res1) {
-          web3.eth.getTransaction(txHash, function(err2,res2){
-            if (res2 != null && res2.blockNumber > 0) {
-              
-              const onDislikedEvent = etherBoard.OnDisliked({},{fromBlock: res2.blockNumber, toBlock: 'latest'});
-              onDislikedEvent.get((err3, res3) => {
-                if (!err3){
-                  for (let i = 0; i < res3.length; i++) { 
-                    setDislike(id, res3[i].args.count.toNumber());
+        if(res.length === 0)return;
+
+          etherBoard.dislikePost(res[0], id, (err1, res1) =>{
+            if(!err1){
+              const txHash = res1;
+              filter.watch(function(err2, res2) {
+                web3.eth.getTransaction(txHash, function(err3,res3){
+                  if (res3 != null && res3.blockNumber > 0) {
+                    
+                    const onDislikedEvent = etherBoard.OnDisliked({},{fromBlock: res3.blockNumber, toBlock: 'latest'});
+                    onDislikedEvent.get((err4, res4) => {
+                      if (!err4){
+                        for (let i = 0; i < res4.length; i++) { 
+                          setDislikeToPost(id, res4[i].args.count.toNumber());
+                        }
+                      }
+                    })
                   }
-                }
-              })
+                });
+              });    
             }
           });
-        });    
-      }
+        }
     });
   }
 

@@ -49,29 +49,39 @@ class Writing extends React.Component {
     })
   }
 
-  handleRegister = (title, data) => {
+  handleRegister = (title, content) => {
     const { contractAddress, abi } = this.props;
     const { setWritingSuccess, setLoading } = this;
     let web3 = window.web3;
-
+    
     const ehterBoardContract = web3.eth.contract(abi);
     const etherBoard = ehterBoardContract.at(contractAddress);
     const filter = web3.eth.filter('latest')
 
-    etherBoard.writePost(title, data, (err, res) =>{
+    web3.eth.getAccounts((err, res) => {
       if(!err){
-        const txHash = res;
-        setLoading(true);
-        filter.watch(function(err, r) {
-          web3.eth.getTransaction(txHash, function(e,r){
-            if (r != null && r.blockNumber > 0) {
-              setLoading(false);
-              setWritingSuccess(true);
-            }
-          });
-        });    
+        if(res.length === 0) return;
+
+        etherBoard.writePost(res[0], title, content, (err1, res1) =>{
+          if(!err1){
+            const txHash = res1;
+            setLoading(true);
+    
+            filter.watch(function(err2, res2) {
+              if(!err2){
+                web3.eth.getTransaction(txHash, function(err3, res3){
+                  if (res3 != null && res3.blockNumber > 0) {
+                    setLoading(false);
+                    setWritingSuccess(true);
+                  }
+                });
+              }
+            });    
+          }
+        });
       }
     });
+    
   }
 
   onEditorStateChange = (editorState) => {
