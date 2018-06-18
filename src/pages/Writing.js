@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import draftToHtml from 'draftjs-to-html';
 
 const styles = theme => ({
   button: {
@@ -49,6 +50,7 @@ class Writing extends React.Component {
     })
   }
 
+
   handleRegister = (title, content) => {
     const { contractAddress, abi } = this.props;
     const { setWritingSuccess, setLoading } = this;
@@ -86,7 +88,7 @@ class Writing extends React.Component {
 
   onEditorStateChange = (editorState) => {
     this.setState({
-      editorState : editorState,
+      editorState
     });
   };
 
@@ -135,7 +137,7 @@ class Writing extends React.Component {
       
             <Grid container item spacing={0} justify="center" key={2}>
                 <Grid item xs={8}>
-                  <Button variant="contained" color="primary" className={classes.button} onClick={() => handleRegister(title, JSON.stringify(convertToRaw(editorState.getCurrentContent())))}>
+                  <Button variant="contained" color="primary" className={classes.button} onClick={() => handleRegister(title, draftToHtml(convertToRaw(editorState.getCurrentContent())))}>
                       Register
                   </Button>
                 </Grid>

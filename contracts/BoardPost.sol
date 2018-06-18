@@ -11,6 +11,7 @@ contract BoardPost is BoardUser {
         string content;
         uint32 like;
         uint32 dislike;
+        uint timestamp;
     }
 
     mapping(address => uint[]) private userPosts;
@@ -20,19 +21,20 @@ contract BoardPost is BoardUser {
         return posts.length;
     }
 
-    function getPost(uint _index) public view returns(string, string, uint32, uint32) {
+    function getPost(uint _index) public view returns(string, string, uint32, uint32, uint) {
         if(!existPost(_index)) revert();
 
         return (
             posts[_index].title,
             posts[_index].content,
             posts[_index].like,
-            posts[_index].dislike
+            posts[_index].dislike,
+            posts[_index].timestamp
         );
     }
 
     function writePost(address _sender, string _title, string _content) public onlySender(_sender) {
-        uint postLength = posts.push(Post(_title, _content, 0, 0));
+        uint postLength = posts.push(Post(_title, _content, 0, 0, now));
         userPosts[_sender].push(postLength - 1);
         emit OnWritten(_title, _content);
     }

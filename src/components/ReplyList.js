@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Reply from './Reply';
+import List from '@material-ui/core/List';
 
 const styles = theme => ({
     root: {
@@ -19,21 +20,20 @@ class ReplyList extends Component{
         const { replies, contractAddress, abi } = this.props;
 
         return (
-            <Grid container spacing={32} direction="column">
-                {
-                    replies.map((reply, index) => (
-                        <Grid container item spacing={0} justify="center" key={index}>
-                            <Grid item xs={8}>
-                                <Reply 
-                                    content={reply.content} 
-                                    contractAddress={contractAddress}
-                                    abi={abi}
-                                />    
-                            </Grid>
-                        </Grid>
-                    ))
-                }
-            </Grid>
+            <div>
+                <List>
+                    {
+                        replies.map((reply, index) => (
+                            <Reply
+                                key={index}
+                                timestamp={reply.timestamp}
+                                content={reply.content} 
+                                contractAddress={contractAddress}
+                                abi={abi}/>
+                        ))
+                    }
+                </List>
+            </div>
         )
     }
 }

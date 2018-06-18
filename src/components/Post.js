@@ -4,18 +4,19 @@ import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
-import Reply from './Reply';
 import { Button } from '@material-ui/core';
 import ReplyList from './ReplyList';
 
@@ -26,8 +27,8 @@ const styles = theme => ({
     card: {
     },
     media: {
-      height: 0,
-      //paddingTop: '56.25%', // 16:9
+      transitionDuration: '0.3s',
+      paddingTop: '56.25%', // 16:9
     },
     actions: {
       display: 'flex',
@@ -100,15 +101,17 @@ class Post extends Component {
                                 const content = String(res5[0]);
                                 const like = parseInt(res5[1], 10);
                                 const dislike = parseInt(res5[2], 10);
+                                const timestamp = parseInt(res5[3], 10);
+
                                 newReplies.push(
                                   {
-                                    content : content,
-                                    like : like,
-                                    dislike : dislike
+                                    content,
+                                    like,
+                                    dislike,
+                                    timestamp
                                   });
             
                                 if(i === repliesCount - 1){
-                                  console.log(newReplies);
                                   setRepliesToPost(id, newReplies);
                                 }
                               }
@@ -148,11 +151,14 @@ class Post extends Component {
                 const content = String(res1[0]);
                 const like = parseInt(res1[1], 10);
                 const dislike = parseInt(res1[2], 10);
+                const timestamp = parseInt(res1[3], 10);
+
                 newReplies.push(
                   {
-                    content : content,
-                    like : like,
-                    dislike : dislike
+                    content,
+                    like,
+                    dislike,
+                    timestamp
                   });
                   
                 if(i === repliesCount - 1){
@@ -240,10 +246,12 @@ class Post extends Component {
     });
   }
 
+  /** dangerouslySetInnerHTML={{__html: content}} */
   render() {
-    const { classes, title, content, like, dislike, replies, repliesCount } = this.props;
-    const { contractAddress, abi } = this.props;
+    const { classes, thumbnailSrc, summary, title, like, dislike, timestamp, replies, repliesCount } = this.props;
     const { registerComment, handleChange } = this;
+    const date = new Date(timestamp * 1000);
+    const dateString = date.toDateString();
     
     return (
       <div>
@@ -255,11 +263,21 @@ class Post extends Component {
               </Avatar>
             }
             title={title}
-            subheader="June 14, 2018"
+            subheader={dateString}
           />
+
+          {thumbnailSrc &&
+            <CardMedia
+              className={classes.media}
+              image={thumbnailSrc}
+              title="Summary"
+            />
+          }
           
-          <CardContent dangerouslySetInnerHTML={{__html: content}}>
-            
+          <CardContent>
+            <Typography component="p">
+              {summary}
+            </Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
             <IconButton aria-label="like" onClick={this.handleLikeClick}>
@@ -284,6 +302,7 @@ class Post extends Component {
           </CardActions>
           <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
             <CardContent>
+              <ReplyList replies={replies}/>
               <Grid container spacing={32} direction="row">
                 <Grid container item spacing={0}>
                   <Grid item xs={8}>
@@ -301,9 +320,6 @@ class Post extends Component {
                     />
                   </Grid>
                 </Grid>
-
-
-                <ReplyList replies={replies}/>
 
                 <Grid container item spacing={0}>
                   <Grid item xs={2}>

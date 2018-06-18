@@ -8,6 +8,7 @@ contract BoardReply is BoardPost {
         string content;
         uint32 like;
         uint32 dislike;
+        uint timestamp;
     }
 
     mapping(address => uint[]) private userReplies;
@@ -15,16 +16,26 @@ contract BoardReply is BoardPost {
     mapping(uint => uint[]) private replyIdToReplyIds;
     Reply[] private replies;
 
-    function getReplyFromPost(uint _postId, uint _index) public view validateId(_postId) returns(string, uint32, uint32) {
+    function getReplyFromPost(uint _postId, uint _index) public view validateId(_postId) returns(string, uint32, uint32, uint) {
         uint[] memory replyIds = postIdToReplyIds[_postId];
         uint replyId = replyIds[_index];
-        return (replies[replyId].content, replies[replyId].like, replies[replyId].dislike);
+        return (
+            replies[replyId].content, 
+            replies[replyId].like, 
+            replies[replyId].dislike,
+            replies[replyId].timestamp
+        );
     }
 
-    function getReplyFromReply(uint _replyId, uint _index) public view validateId(_replyId) returns(string, uint32, uint32) {
+    function getReplyFromReply(uint _replyId, uint _index) public view validateId(_replyId) returns(string, uint32, uint32, uint) {
         uint[] memory replyIds = replyIdToReplyIds[_replyId];
         uint replyId = replyIds[_index];
-        return (replies[replyId].content, replies[replyId].like, replies[replyId].dislike);
+        return (
+            replies[replyId].content, 
+            replies[replyId].like, 
+            replies[replyId].dislike,
+            replies[replyId].timestamp
+        );
     }
 
     function getReplyCountFromPost(uint _postId) public view validateId(_postId) returns(uint){
@@ -38,13 +49,13 @@ contract BoardReply is BoardPost {
     }
 
     function writeReplyToPost(address _sender, uint _postId, string _content) public validateId(_postId) onlySender(_sender) {
-        uint replyLength = replies.push(Reply(_content, 0, 0));
+        uint replyLength = replies.push(Reply(_content, 0, 0, now));
         postIdToReplyIds[_postId].push(replyLength - 1);
         emit OnReplied();
     }
 
     function writeReplyToReply(address _sender, uint _replyId, string _content) public validateId(_replyId) onlySender(_sender){
-        uint replyLength = replies.push(Reply(_content, 0, 0));
+        uint replyLength = replies.push(Reply(_content, 0, 0, now));
         replyIdToReplyIds[_replyId].push(replyLength - 1);
         emit OnReplied();
     }

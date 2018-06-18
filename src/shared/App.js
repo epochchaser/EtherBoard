@@ -36,18 +36,6 @@ class App extends Component {
     accountChecker : ''
   };
 
-  handleWritingRegister = (rawData) => {
-    const { myAddress } = this.state;
-
-    if(myAddress){
-      //여기 컨트랙트로 보내는 로직
-      console.log(rawData);
-    } else {
-      alert('You need to login to MetaMask first.');
-        return;	  
-    }
-  }
-
   handleLoginDialog = () => {
     this.setState({
       ...this.state,

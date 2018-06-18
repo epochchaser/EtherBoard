@@ -23,13 +23,16 @@ class PostList extends Component{
                 {
                     posts.map(post => (
                         <Grid container item spacing={0} justify="center" key={post.id}>
-                            <Grid item xs={8}>
+                            <Grid item xs={6}>
                                 <Post 
                                     id={post.id} 
+                                    thumbnailSrc={post.thumbnailSrc}
+                                    summary={post.summary}
                                     title={post.title} 
                                     content={post.content} 
                                     like={post.like} 
                                     dislike={post.dislike}
+                                    timestamp={post.timestamp}
                                     replies={post.replies}
                                     repliesCount={post.repliesCount}
                                     contractAddress={contractAddress}

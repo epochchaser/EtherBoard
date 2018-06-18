@@ -54,6 +54,10 @@ class RootProvider extends Component {
           {
             "name": "",
             "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint256"
           }
         ],
         "payable": false,
@@ -354,6 +358,10 @@ class RootProvider extends Component {
           {
             "name": "",
             "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint256"
           }
         ],
         "payable": false,
@@ -385,6 +393,10 @@ class RootProvider extends Component {
           {
             "name": "",
             "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint256"
           }
         ],
         "payable": false,
