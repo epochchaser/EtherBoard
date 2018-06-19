@@ -50,40 +50,36 @@ class Writing extends React.Component {
     })
   }
 
-
-  handleRegister = (title, content) => {
-    const { contractAddress, abi } = this.props;
+  handleRegister = async (title, content) =>{
+    const { getAccounts, writePost } = this.props;
     const { setWritingSuccess, setLoading } = this;
     let web3 = window.web3;
-    
-    const ehterBoardContract = web3.eth.contract(abi);
-    const etherBoard = ehterBoardContract.at(contractAddress);
     const filter = web3.eth.filter('latest')
 
-    web3.eth.getAccounts((err, res) => {
-      if(!err){
-        if(res.length === 0) return;
+    try
+    {
+      const accounts = await getAccounts();
+      if(accounts.length === 0) throw new Error("please activate your wallet first.");
+      const txHash = await writePost(accounts[0], title, content);
 
-        etherBoard.writePost(res[0], title, content, (err1, res1) =>{
-          if(!err1){
-            const txHash = res1;
-            setLoading(true);
-    
-            filter.watch(function(err2, res2) {
-              if(!err2){
-                web3.eth.getTransaction(txHash, function(err3, res3){
-                  if (res3 != null && res3.blockNumber > 0) {
-                    setLoading(false);
-                    setWritingSuccess(true);
-                  }
-                });
-              }
-            });    
-          }
-        });
-      }
-    });
-    
+      setLoading(true);
+      filter.watch(function(err, res) {
+        if(!err){
+          web3.eth.getTransaction(txHash, function(err1, res1){
+            if (res1 != null && res1.blockNumber > 0) {
+              setLoading(false);
+              setWritingSuccess(true);
+            }
+          });
+        }
+      });    
+    }
+    catch(err){
+      console.log(err);
+      setLoading(false);
+      setWritingSuccess(false);
+    }
+
   }
 
   onEditorStateChange = (editorState) => {

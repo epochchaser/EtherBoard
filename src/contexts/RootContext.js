@@ -528,6 +528,116 @@ class RootProvider extends Component {
         this.setState({
           posts : modifiedPosts
         });
+    },
+
+    getAccounts : () => {
+      const web3 = window.web3;
+
+      return new Promise((resolve, reject) => {
+        if(!web3)
+          reject(new  Error("please activate your wallet first."));
+
+        web3.eth.getAccounts((err, res) => {
+          if(!err){
+            resolve(res);
+          }
+          else{
+            reject(err);
+          }
+        });
+      })
+    },
+
+    writePost : (accountAddr, title, content) => {
+      const { abi, contractAddress } = this.state;
+      const web3 = window.web3;
+      
+      return new Promise((resolve, reject) => {
+        const ehterBoardContract = web3.eth.contract(abi);
+        if(!ehterBoardContract)
+          reject(new Error("incorrect abi."));
+
+        const etherBoard = ehterBoardContract.at(contractAddress);
+        if(!etherBoard)
+          reject(new Error("incorrect contractAddress."));;
+
+        etherBoard.writePost(accountAddr, title, content, (err, res) =>{
+          if(!err){
+            resolve(res);
+          }else{
+            reject(err);
+          }
+        });
+      })
+    },
+
+    getPostCount : () => {
+      const { abi, contractAddress } = this.state;
+      let web3 = window.web3;
+
+      return new Promise((resolve, reject) => {
+        const ehterBoardContract = web3.eth.contract(abi);
+        if(!ehterBoardContract)
+          reject(new Error("incorrect abi."));
+
+        const etherBoard = ehterBoardContract.at(contractAddress);
+        if(!etherBoard)
+          reject(new Error("incorrect contractAddress."));;
+
+        etherBoard.getPostCount((err, res) => {
+          if(!err){
+            resolve(res.toNumber());
+          } else{
+            reject(err);
+          }
+        });
+      });
+    },
+
+    getPost : postId => {
+      const { abi, contractAddress } = this.state;
+      let web3 = window.web3;
+
+      return new Promise((resolve, reject) => {
+        const ehterBoardContract = web3.eth.contract(abi);
+        if(!ehterBoardContract)
+          reject(new Error("incorrect abi."));
+
+        const etherBoard = ehterBoardContract.at(contractAddress);
+        if(!etherBoard)
+          reject(new Error("incorrect contractAddress."));;
+
+        etherBoard.getPost(postId , (err, res) => {
+          if(!err){
+            resolve(res);
+          }else{
+            reject(err);
+          }
+        });
+      });
+    },
+
+    getReplyCountFromPost : postId => {
+      const { abi, contractAddress } = this.state;
+      let web3 = window.web3;
+
+      return new Promise((resolve, reject) => {
+        const ehterBoardContract = web3.eth.contract(abi);
+        if(!ehterBoardContract)
+          reject(new Error("incorrect abi."));
+
+        const etherBoard = ehterBoardContract.at(contractAddress);
+        if(!etherBoard)
+          reject(new Error("incorrect contractAddress."));;
+
+        etherBoard.getReplyCountFromPost(postId , (err, res) => {
+          if(!err){
+            resolve(res.toNumber());
+          }else{
+            reject(err);
+          }
+        });
+      });
     }
   }
 
@@ -557,6 +667,11 @@ function withRoot(WrappedComponent) {
               setLikeToPost={actions.setLikeToPost}
               setDislikeToPost={actions.setDislikeToPost}
               setRepliesToPost={actions.setRepliesToPost}
+              getAccounts={actions.getAccounts}
+              writePost={actions.writePost}
+              getPostCount={actions.getPostCount}
+              getPost={actions.getPost}
+              getReplyCountFromPost={actions.getReplyCountFromPost}
             />
           )
         }

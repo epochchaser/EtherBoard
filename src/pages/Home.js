@@ -46,54 +46,45 @@ class Home extends Component {
     return {thumbnailSrc, summary};
   }
 
-  loadPosts = () => {
-    const { contractAddress, abi, setPosts } = this.props;
+  loadPosts = async() => {
+    const { setPosts, getPostCount, getPost, getReplyCountFromPost } = this.props;
     const { extractThumbnailInfo } = this;
-    let web3 = window.web3;
-    const ehterBoardContract = web3.eth.contract(abi);
-    const etherBoard = ehterBoardContract.at(contractAddress);
-    
-    etherBoard.getPostCount((err, res) => {
-      if(!err){
-        let newPosts = [];
-        const count = res.toNumber();
+    const newPosts = [];
+
+    try
+    {
+      const postCount = await getPostCount();
         
-        for(let i = count - 1; i >= 0; i--){
-          etherBoard.getPost(i , (err1, res1) => {
-            if(!err1){
-              const title = String(res1[0]);
-              const content = String(res1[1]);
-              const like = parseInt(res1[2], 10);
-              const dislike = parseInt(res1[3], 10);
-              const timestamp = parseInt(res1[4], 10);
-              const thumbnailInfo = extractThumbnailInfo(content);
+      for(let i = postCount - 1; i >= 0; i--){
+        const post = await getPost(i);
+        const title = String(post[0]);
+        const content = String(post[1]);
+        const like = parseInt(post[2], 10);
+        const dislike = parseInt(post[3], 10);
+        const timestamp = parseInt(post[4], 10);
+        const thumbnailInfo = extractThumbnailInfo(content);
 
-              etherBoard.getReplyCountFromPost(i , (err2, res2) => {
-                if(!err2){
-                  const repliesCount = res2.toNumber();
-                  newPosts.push(
-                    {
-                      id : i, 
-                      thumbnailSrc : thumbnailInfo.thumbnailSrc, 
-                      summary : thumbnailInfo.summary, 
-                      title, 
-                      content, 
-                      like, 
-                      dislike, 
-                      timestamp,
-                      replies: [], 
-                      repliesCount});
+        const repliesCount = await getReplyCountFromPost(i);
+        newPosts.push(
+          {
+            id : i, 
+            thumbnailSrc : thumbnailInfo.thumbnailSrc, 
+            summary : thumbnailInfo.summary, 
+            title, 
+            content, 
+            like, 
+            dislike, 
+            timestamp,
+            replies: [], 
+            repliesCount});
 
-                  if(i === 0){
-                    setPosts(newPosts);
-                  }
-                }
-              });
-            }
-          });
+        if(i === 0){
+          setPosts(newPosts);
         }
       }
-    });
+    }catch(err){
+      console.log(err);
+    }
   }
 
   shouldComponentUpdate = (nextProps, nextState) =>{
