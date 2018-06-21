@@ -34,4 +34,9 @@ class Login extends React.Component {
   }
 }
 
+Login.defaultProps = {
+  contentText : '',
+  open : false
+}
+
 export default Login;

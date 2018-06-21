@@ -574,13 +574,15 @@ class RootProvider extends Component {
     getPostCount : () => {
       const { abi, contractAddress } = this.state;
       let web3 = window.web3;
-
+      
       return new Promise((resolve, reject) => {
-        const ehterBoardContract = web3.eth.contract(abi);
-        if(!ehterBoardContract)
+        const etherBoardContract = web3.eth.contract(abi);
+        
+        if(!etherBoardContract)
           reject(new Error("incorrect abi."));
 
-        const etherBoard = ehterBoardContract.at(contractAddress);
+        const etherBoard = etherBoardContract.at(contractAddress);
+        
         if(!etherBoard)
           reject(new Error("incorrect contractAddress."));;
 

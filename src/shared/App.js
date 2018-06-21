@@ -13,6 +13,7 @@ import Routes from '../Routes';
 import Login from "../components/Login";
 import Web3 from 'web3';
 import Home from '@material-ui/icons/Home';
+import { withRoot } from '../contexts/RootContext';
 
 const styles = {
   root: {
@@ -84,7 +85,7 @@ class App extends Component {
     const { classes } = this.props;
     const { myAddress, openLogin } = this.state;
     const { handleLoginDialog } = this;
-
+    
     return (
       <Router>
         <div className={classes.root}>
@@ -129,7 +130,7 @@ class App extends Component {
           </AppBar>
 
           <main style={{marginTop: '4rem'}}>
-            <Routes />
+            <Routes {...this.props}/>
           </main>
         </div>
       </Router>
@@ -141,4 +142,4 @@ App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(App);
+export default withRoot(withStyles(styles)(App));

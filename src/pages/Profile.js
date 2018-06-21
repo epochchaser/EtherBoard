@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRoot } from '../contexts/RootContext';
 
 const Profile = () =>{
     return(
@@ -8,4 +9,4 @@ const Profile = () =>{
     )
 }
 
-export default Profile;
+export default withRoot(Profile);

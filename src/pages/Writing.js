@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import draftToHtml from 'draftjs-to-html';
+import ErrorSnackBar from '../components/ErrorSnackBar';
 
 const styles = theme => ({
   button: {
@@ -36,7 +37,26 @@ class Writing extends React.Component {
     editorState : EditorState.createEmpty(),
     title : '',
     loading : false,
+    openErrorSnackBar : false,
+    snackBarErrorMsg : ''
   }
+
+  handleOpenErrorSnackBar = (snackBarErrorMsg) => {
+    this.setState(
+      {
+         openErrorSnackBar: true ,
+         snackBarErrorMsg : snackBarErrorMsg
+      }
+    );
+  };
+
+  handleCloseErrorSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ openErrorSnackBar: false });
+  };
 
   setWritingSuccess = (value) =>{
     this.setState({
@@ -52,7 +72,7 @@ class Writing extends React.Component {
 
   handleRegister = async (title, content) =>{
     const { getAccounts, writePost } = this.props;
-    const { setWritingSuccess, setLoading } = this;
+    const { setWritingSuccess, setLoading, handleOpenErrorSnackBar } = this;
     let web3 = window.web3;
     const filter = web3.eth.filter('latest')
 
@@ -75,11 +95,10 @@ class Writing extends React.Component {
       });    
     }
     catch(err){
-      console.log(err);
+      handleOpenErrorSnackBar(err.message);
       setLoading(false);
       setWritingSuccess(false);
     }
-
   }
 
   onEditorStateChange = (editorState) => {
@@ -108,6 +127,7 @@ class Writing extends React.Component {
             <CircularProgress className={classes.progress} size={50} />
           </div>
         : (
+          <div>
           <Grid container spacing={32} direction="column">
             <Grid container item spacing={0} justify="center" key={0}>
               <Grid item xs={8}>
@@ -139,6 +159,9 @@ class Writing extends React.Component {
                 </Grid>
             </Grid>
           </Grid>
+
+          <ErrorSnackBar errMsg={this.state.snackBarErrorMsg} isOpen={this.state.openErrorSnackBar} onClose={this.handleCloseErrorSnackBar}/>
+          </div>
           )
         )
       );

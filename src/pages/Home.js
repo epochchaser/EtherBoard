@@ -1,11 +1,39 @@
 import React, { Component } from 'react';
 import PostList from '../components/PostList';
-import { withRoot } from '../contexts/RootContext';
 import htmlToDraft from 'html-to-draftjs';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { withRoot } from '../contexts/RootContext';
+import { withStyles } from '@material-ui/core/styles';
+import ErrorSnackBar from '../components/ErrorSnackBar';
+import PropTypes from 'prop-types';
+
+const styles = theme => ({
+
+});
 
 class Home extends Component {
+  state = {
+    snackBarErrorMsg: '',
+    openErrorSnackBar : false
+  }
   
+  handleOpenErrorSnackBar = (snackBarErrorMsg) => {
+    this.setState(
+      {
+         openErrorSnackBar: true ,
+         snackBarErrorMsg : snackBarErrorMsg
+      }
+    );
+  };
+
+  handleCloseErrorSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ openErrorSnackBar: false });
+  };
+
   extractThumbnailInfo = (html) => {
     let summary = '';
     let thumbnailSrc = '';
@@ -48,7 +76,7 @@ class Home extends Component {
 
   loadPosts = async() => {
     const { setPosts, getPostCount, getPost, getReplyCountFromPost } = this.props;
-    const { extractThumbnailInfo } = this;
+    const { extractThumbnailInfo, handleOpenErrorSnackBar } = this;
     const newPosts = [];
 
     try
@@ -83,7 +111,7 @@ class Home extends Component {
         }
       }
     }catch(err){
-      console.log(err);
+      handleOpenErrorSnackBar(err.message);
     }
   }
 
@@ -107,9 +135,15 @@ class Home extends Component {
             setLikeToPost={setLikeToPost}
             setDislikeToPost={setDislikeToPost}
             setRepliesToPost={setRepliesToPost}/>
+            <ErrorSnackBar errMsg={this.state.snackBarErrorMsg} isOpen={this.state.openErrorSnackBar} onClose={this.handleCloseErrorSnackBar}/>
         </div>
     );
   }
 }
 
-export default withRoot(Home);
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withRoot(withStyles(styles)(Home));
