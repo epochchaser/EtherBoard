@@ -493,7 +493,15 @@ class RootProvider extends Component {
     setLikeToPost : (id, like) => {
       const { posts } = this.state;
       const modifiedPosts = posts.map(item => item.id === id
-        ? ({ ...item, like: like }) 
+        ? (
+            {
+             ...item, 
+             replies :[
+              ...item.replies
+             ],
+             like: like 
+            }
+          ) 
         : item);
 
         this.setState({
@@ -504,7 +512,15 @@ class RootProvider extends Component {
     setDislikeToPost : (id, dislike) => {
       const { posts } = this.state;
       const modifiedPosts = posts.map(item => item.id === id
-        ? ({ ...item, dislike: dislike }) 
+        ? (
+            {
+               ...item,
+               replies :[
+                ...item.replies
+               ],
+                dislike: dislike 
+            }
+          ) 
         : item);
 
         this.setState({
@@ -674,6 +690,7 @@ function withRoot(WrappedComponent) {
               getPostCount={actions.getPostCount}
               getPost={actions.getPost}
               getReplyCountFromPost={actions.getReplyCountFromPost}
+              routeTo={actions.routeTo}
             />
           )
         }

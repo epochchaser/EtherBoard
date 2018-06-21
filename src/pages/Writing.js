@@ -112,7 +112,15 @@ class Writing extends React.Component {
             }
           });
         }
+
+        filter.stopWatching((err, res) => {
+          if(err){
+            console.log(err);
+          }
+        });
       });    
+
+      
     }
     catch(err){
       handleOpenErrorSnackBar(err.message);

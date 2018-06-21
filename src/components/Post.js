@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -16,6 +17,7 @@ import red from '@material-ui/core/colors/red';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import PersonIcon from '@material-ui/icons/Person';
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
 import ReplyList from './ReplyList';
@@ -24,7 +26,11 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
     },
-    card: {
+    cardHeader: {
+      cursor : 'pointer'
+    },
+    cardContent: {
+      cursor : 'pointer'
     },
     media: {
       transitionDuration: '0.3s',
@@ -62,7 +68,8 @@ const styles = theme => ({
 class Post extends Component {
   state = {
     expanded: false,
-    commentOnEdit : ''
+    commentOnEdit : '',
+    routeToFullPost : false
   }
 
   handleChange = name => event => {
@@ -122,6 +129,12 @@ class Post extends Component {
                   }
                 });
               }
+
+              filter.stopWatching((err, res) => {
+                if(err){
+                  console.log(err);
+                }
+              });
             });    
           }
         });
@@ -204,6 +217,12 @@ class Post extends Component {
                   }
                 });
               }
+
+              filter.stopWatching((err, res) => {
+                if(err){
+                  console.log(err);
+                }
+              });
             });    
           }
         });
@@ -239,6 +258,12 @@ class Post extends Component {
                     })
                   }
                 });
+
+                filter.stopWatching((err, res) => {
+                  if(err){
+                    console.log(err);
+                  }
+                });
               });    
             }
           });
@@ -246,20 +271,29 @@ class Post extends Component {
     });
   }
 
-  /** dangerouslySetInnerHTML={{__html: content}} */
+  handleCardDetail = () =>{
+    this.setState({
+      routeToFullPost : true
+    });
+  }
+
+  
   render() {
-    const { classes, thumbnailSrc, summary, title, like, dislike, timestamp, replies, repliesCount } = this.props;
+    const { classes, id, thumbnailSrc, summary, title, like, dislike, timestamp, replies, repliesCount } = this.props;
     const { registerComment, handleChange } = this;
     const date = new Date(timestamp * 1000);
     const dateString = date.toDateString();
     
     return (
-      <div>
+      this.state.routeToFullPost 
+      ? <Redirect to={`/post/${id}`}/>
+      : (
+        <div>
         <Card className={classes.card}>
-          <CardHeader
+          <CardHeader onClick={this.handleCardDetail} className={classes.cardHeader}
             avatar={
               <Avatar aria-label="Recipe" className={classes.avatar}>
-                R
+                <PersonIcon/>
               </Avatar>
             }
             title={title}
@@ -268,13 +302,14 @@ class Post extends Component {
 
           {thumbnailSrc &&
             <CardMedia
+              onClick={this.handleCardDetail}
               className={classes.media}
               image={thumbnailSrc}
               title="Summary"
             />
           }
           
-          <CardContent>
+          <CardContent onClick={this.handleCardDetail} className={classes.cardContent}>
             <Typography component="p">
               {summary}
             </Typography>
@@ -333,6 +368,7 @@ class Post extends Component {
           </Collapse>
         </Card>
       </div>
+      )
     );
   }
 }

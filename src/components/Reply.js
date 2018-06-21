@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import PersonIcon from '@material-ui/icons/Person';
 import classnames from 'classnames';
 
 const styles = theme => ({
@@ -34,7 +35,7 @@ class Reply extends Component {
     return (
       <ListItem>
         <Avatar>
-          R
+          <PersonIcon/>
         </Avatar>
         <ListItemText primary={content} secondary={dateString} />
         <IconButton

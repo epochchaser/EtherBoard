@@ -18,7 +18,6 @@ import { withRoot } from '../contexts/RootContext';
 const styles = {
   root: {
     flexGrow: 1,
-    
   },
   flex: {
     flex: 1,
