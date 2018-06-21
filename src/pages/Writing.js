@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import 'draft-js/dist/Draft.css'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -28,6 +29,25 @@ const styles = theme => ({
   progress: {
     flex : 1,
     margin: theme.spacing.unit * 2,
+  },
+  rdw_storybook_root: {
+    margin: '50px',
+    width: '90%',
+  },
+  rdw_storybook_editor: {
+    border: '1px solid #F1F1F1',
+    padding: '5px',
+    minHeight: '400px'
+  },
+  rdw_storybook_toolbar: {
+    top: '-130px'
+  },
+  rdw_storybook_textarea: {
+    margintop: '20px',
+    resize: 'none',
+    width: '100%',
+    border: '1px solid #F1F1F1',
+    height: '100px'
   }
 });
 
@@ -144,8 +164,9 @@ class Writing extends React.Component {
                 <Grid item xs={8}>
                       <Editor 
                         editorState={editorState}
-                        wrapperClassName="demo-wrapper"
-                        editorClassName="demo-editor"
+                        toolbarClassName={classes.rdw_storybook_toolbar}
+                        wrapperClassName={classes.rdw_storybook_wrapper}
+                        editorClassName={classes.rdw_storybook_editor}
                         onEditorStateChange={onEditorStateChange}
                       />
                 </Grid>
