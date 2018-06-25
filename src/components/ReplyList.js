@@ -6,29 +6,28 @@ import List from '@material-ui/core/List';
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
+        width : "100%"
     },
   });
 
 class ReplyList extends Component{
-    state = {
-        spacing: '16',
-      };
-
     render(){
-        const { replies, contractAddress, abi } = this.props;
-
+        const { replies, contractAddress, abi, getReply, getReplyCount, classes } = this.props;
+        
         return (
-            <div>
-                <List>
+            <div className={classes.root}>
+                <List component="div" disablePadding>
                     {
-                        replies.map((reply, index) => (
+                        replies.map(reply => (
                             <Reply
-                                key={index}
+                                key={reply.id}
+                                id={reply.id}
                                 timestamp={reply.timestamp}
                                 content={reply.content} 
                                 contractAddress={contractAddress}
-                                abi={abi}/>
+                                abi={abi}
+                                getReply={getReply}
+                                getReplyCount={getReplyCount}/>
                         ))
                     }
                 </List>

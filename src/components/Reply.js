@@ -1,30 +1,81 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import PersonIcon from '@material-ui/icons/Person';
-import classnames from 'classnames';
+import ReplyList from '../components/ReplyList';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Collapse from '@material-ui/core/Collapse';
 
 const styles = theme => ({
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-    marginLeft: 'auto',
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
+  nested: {
+    paddingLeft: theme.spacing.unit * 4,
   }
 });
 
 class Reply extends Component {
   state = {
     expanded: false,
+    like : 0,
+    dislike : 0,
+    replies : [],
+    repliesCount : 0
+  }
+
+  loadReplies = async(postId) => {
+    const { getReplyCount, getReply } = this.props;
+    const newReplies = [];
+    
+    try
+    {
+        const repliesCount = await getReplyCount(postId);
+        
+        for(let i = repliesCount - 1; i >= 0; i--){
+          const reply = await getReply(postId, i);
+          newReplies.push(
+            {
+              id : parseInt(reply[0],10),
+              title : String(reply[1]),
+              content : String(reply[2]),
+              like : parseInt(reply[3], 10),
+              dislike : parseInt(reply[4], 10),
+              timestamp : parseInt(reply[5], 10)
+            });
+        }
+
+        return {
+          replies : newReplies,
+          repliesCount : repliesCount
+        }
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  handleExpanded = async(id) =>{
+    const { expanded } = this.state;
+
+    if(false === expanded){
+      const {replies, repliesCount} = await this.loadReplies(id);
+      this.setState({
+        expanded : !expanded,
+        replies,
+        repliesCount
+      })
+    }
+    else{
+      this.setState({
+        expanded : !expanded,
+        replies : []
+      })
+    }
+  }
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+    return (this.state !== nextState ? true : false);
   }
 
   render() {
@@ -33,22 +84,18 @@ class Reply extends Component {
     const dateString = date.toDateString();
     
     return (
-      <ListItem>
-        <Avatar>
-          <PersonIcon/>
-        </Avatar>
-        <ListItemText primary={content} secondary={dateString} />
-        <IconButton
-            className={classnames(classes.expand, {
-              [classes.expandOpen]: this.state.expanded,
-            })}
-            onClick={this.handleExpandClick}
-            aria-expanded={this.state.expanded}
-            aria-label="Show more"
-          >
-            <ExpandMoreIcon />
-          </IconButton>
+      <Fragment>
+        <ListItem button className={classes.nested} onClick={() => this.handleExpanded(id)}>
+          <ListItemIcon>
+            <PersonIcon/>
+          </ListItemIcon>
+          <ListItemText primary={content} secondary={dateString}/>
+          {this.state.expanded ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+          <ReplyList replies={this.state.replies}/>
+        </Collapse>
+      </Fragment>
     );
   }
 }

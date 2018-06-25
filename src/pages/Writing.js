@@ -158,7 +158,7 @@ class Writing extends React.Component {
           <div>
           <Grid container spacing={32} direction="column">
             <Grid container item spacing={0} justify="center" key={0}>
-              <Grid item xs={8}>
+              <Grid item xs={4}>
               <TextField id="title" label="Title" InputLabelProps={{shrink: true,}}
                 placeholder="Title"
                 helperText="Please type your title."
@@ -169,7 +169,7 @@ class Writing extends React.Component {
             </Grid>
 
             <Grid container item spacing={0} justify="center" key={1}>
-                <Grid item xs={8}>
+                <Grid item xs={4}>
                       <Editor 
                         editorState={editorState}
                         toolbarClassName={classes.rdw_storybook_toolbar}
@@ -181,7 +181,7 @@ class Writing extends React.Component {
             </Grid>
       
             <Grid container item spacing={0} justify="center" key={2}>
-                <Grid item xs={8}>
+                <Grid item xs={4}>
                   <Button variant="contained" color="primary" className={classes.button} onClick={() => handleRegister(title, draftToHtml(convertToRaw(editorState.getCurrentContent())))}>
                       Register
                   </Button>

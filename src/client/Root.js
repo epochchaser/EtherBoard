@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import App from '../shared/App';
 import { RootProvider } from '../contexts/RootContext';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
 
 const AppProvider = ({ contexts, children }) => contexts.reduce(
     (prev, context) => React.createElement(context, {

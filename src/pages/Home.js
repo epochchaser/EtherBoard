@@ -75,7 +75,7 @@ class Home extends Component {
   }
 
   loadPosts = async() => {
-    const { setPosts, getPostCount, getPost, getReplyCountFromPost } = this.props;
+    const { setPosts, getPostCount, getPost, getReplyCount } = this.props;
     const { extractThumbnailInfo, handleOpenErrorSnackBar } = this;
     const newPosts = [];
 
@@ -85,17 +85,18 @@ class Home extends Component {
         
       for(let i = postCount - 1; i >= 0; i--){
         const post = await getPost(i);
-        const title = String(post[0]);
-        const content = String(post[1]);
-        const like = parseInt(post[2], 10);
-        const dislike = parseInt(post[3], 10);
-        const timestamp = parseInt(post[4], 10);
+        const id = parseInt(post[0]);
+        const title = String(post[1]);
+        const content = String(post[2]);
+        const like = parseInt(post[3], 10);
+        const dislike = parseInt(post[4], 10);
+        const timestamp = parseInt(post[5], 10);
         const thumbnailInfo = extractThumbnailInfo(content);
 
-        const repliesCount = await getReplyCountFromPost(i);
+        const repliesCount = await getReplyCount(i);
         newPosts.push(
           {
-            id : i, 
+            id, 
             thumbnailSrc : thumbnailInfo.thumbnailSrc, 
             summary : thumbnailInfo.summary, 
             title, 
@@ -124,7 +125,7 @@ class Home extends Component {
   }
 
   render() {
-    const { posts, contractAddress, abi, setLikeToPost, setDislikeToPost, setRepliesToPost } = this.props;
+    const { posts, contractAddress, abi, setLike, setDislike, setReplies } = this.props;
 
     return (
         <div>
@@ -132,9 +133,9 @@ class Home extends Component {
             posts={posts}
             contractAddress={contractAddress}
             abi={abi}
-            setLikeToPost={setLikeToPost}
-            setDislikeToPost={setDislikeToPost}
-            setRepliesToPost={setRepliesToPost}/>
+            setLike={setLike}
+            setDislike={setDislike}
+            setReplies={setReplies}/>
             <ErrorSnackBar errMsg={this.state.snackBarErrorMsg} isOpen={this.state.openErrorSnackBar} onClose={this.handleCloseErrorSnackBar}/>
         </div>
     );

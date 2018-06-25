@@ -5,102 +5,8 @@ const { Provider, Consumer: RootConsumer } = Context;
 
 class RootProvider extends Component {
   state = {
-    contractAddress : '0x3227bf316f7828654a17b5052a997cc644a96ff7',
+    contractAddress : '0xde612d976d143754bc9f82f7e142c70d12aed174',
     abi : [
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_sender",
-            "type": "address"
-          },
-          {
-            "name": "_title",
-            "type": "string"
-          },
-          {
-            "name": "_content",
-            "type": "string"
-          }
-        ],
-        "name": "writePost",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_index",
-            "type": "uint256"
-          }
-        ],
-        "name": "getPost",
-        "outputs": [
-          {
-            "name": "",
-            "type": "string"
-          },
-          {
-            "name": "",
-            "type": "string"
-          },
-          {
-            "name": "",
-            "type": "uint32"
-          },
-          {
-            "name": "",
-            "type": "uint32"
-          },
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_sender",
-            "type": "address"
-          },
-          {
-            "name": "_index",
-            "type": "uint256"
-          }
-        ],
-        "name": "likePost",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_postIndex",
-            "type": "uint256"
-          }
-        ],
-        "name": "existPost",
-        "outputs": [
-          {
-            "name": "isExist",
-            "type": "bool"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
       {
         "constant": true,
         "inputs": [
@@ -167,20 +73,6 @@ class RootProvider extends Component {
       },
       {
         "constant": true,
-        "inputs": [],
-        "name": "getPostCount",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
         "inputs": [
           {
             "name": "_userAddress",
@@ -213,24 +105,6 @@ class RootProvider extends Component {
         "type": "function"
       },
       {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_sender",
-            "type": "address"
-          },
-          {
-            "name": "_index",
-            "type": "uint256"
-          }
-        ],
-        "name": "dislikePost",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
         "constant": true,
         "inputs": [
           {
@@ -256,12 +130,6 @@ class RootProvider extends Component {
         "payable": false,
         "stateMutability": "view",
         "type": "function"
-      },
-      {
-        "anonymous": false,
-        "inputs": [],
-        "name": "OnReplied",
-        "type": "event"
       },
       {
         "anonymous": false,
@@ -306,6 +174,24 @@ class RootProvider extends Component {
       },
       {
         "anonymous": false,
+        "inputs": [],
+        "name": "OnReplied",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "name": "count",
+            "type": "uint256"
+          }
+        ],
+        "name": "OnIncreasedViewsCount",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
         "inputs": [
           {
             "indexed": true,
@@ -335,65 +221,9 @@ class RootProvider extends Component {
       },
       {
         "constant": true,
-        "inputs": [
-          {
-            "name": "_postId",
-            "type": "uint256"
-          },
-          {
-            "name": "_index",
-            "type": "uint256"
-          }
-        ],
-        "name": "getReplyFromPost",
+        "inputs": [],
+        "name": "getPostCount",
         "outputs": [
-          {
-            "name": "",
-            "type": "string"
-          },
-          {
-            "name": "",
-            "type": "uint32"
-          },
-          {
-            "name": "",
-            "type": "uint32"
-          },
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_replyId",
-            "type": "uint256"
-          },
-          {
-            "name": "_index",
-            "type": "uint256"
-          }
-        ],
-        "name": "getReplyFromReply",
-        "outputs": [
-          {
-            "name": "",
-            "type": "string"
-          },
-          {
-            "name": "",
-            "type": "uint32"
-          },
-          {
-            "name": "",
-            "type": "uint32"
-          },
           {
             "name": "",
             "type": "uint256"
@@ -411,7 +241,7 @@ class RootProvider extends Component {
             "type": "uint256"
           }
         ],
-        "name": "getReplyCountFromPost",
+        "name": "getReplyCount",
         "outputs": [
           {
             "name": "",
@@ -426,12 +256,126 @@ class RootProvider extends Component {
         "constant": true,
         "inputs": [
           {
-            "name": "_replyId",
+            "name": "_index",
             "type": "uint256"
           }
         ],
-        "name": "getReplyCountFromReply",
+        "name": "getPost",
         "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_id",
+            "type": "uint256"
+          }
+        ],
+        "name": "getPostById",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_parentId",
+            "type": "uint256"
+          },
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getReply",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint32"
+          },
+          {
+            "name": "",
+            "type": "uint256"
+          },
           {
             "name": "",
             "type": "uint256"
@@ -449,15 +393,15 @@ class RootProvider extends Component {
             "type": "address"
           },
           {
-            "name": "_postId",
-            "type": "uint256"
+            "name": "_title",
+            "type": "string"
           },
           {
             "name": "_content",
             "type": "string"
           }
         ],
-        "name": "writeReplyToPost",
+        "name": "writePost",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -471,7 +415,7 @@ class RootProvider extends Component {
             "type": "address"
           },
           {
-            "name": "_replyId",
+            "name": "_parentId",
             "type": "uint256"
           },
           {
@@ -479,10 +423,107 @@ class RootProvider extends Component {
             "type": "string"
           }
         ],
-        "name": "writeReplyToReply",
+        "name": "writeReply",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_sender",
+            "type": "address"
+          },
+          {
+            "name": "_postId",
+            "type": "uint256"
+          }
+        ],
+        "name": "likePost",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_sender",
+            "type": "address"
+          },
+          {
+            "name": "_postId",
+            "type": "uint256"
+          }
+        ],
+        "name": "dislikePost",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_postId",
+            "type": "uint256"
+          },
+          {
+            "name": "count",
+            "type": "uint256"
+          }
+        ],
+        "name": "increaseViewCount",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_postId",
+            "type": "uint256"
+          }
+        ],
+        "name": "existPost",
+        "outputs": [
+          {
+            "name": "isExist",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_postIndex",
+            "type": "uint256"
+          }
+        ],
+        "name": "existPostIndex",
+        "outputs": [
+          {
+            "name": "isExist",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
         "type": "function"
       }
     ],
@@ -490,7 +531,7 @@ class RootProvider extends Component {
   }
 
   actions = {
-    setLikeToPost : (id, like) => {
+    setLike : (id, like) => {
       const { posts } = this.state;
       const modifiedPosts = posts.map(item => item.id === id
         ? (
@@ -509,7 +550,7 @@ class RootProvider extends Component {
         });
     },
 
-    setDislikeToPost : (id, dislike) => {
+    setDislike : (id, dislike) => {
       const { posts } = this.state;
       const modifiedPosts = posts.map(item => item.id === id
         ? (
@@ -534,7 +575,7 @@ class RootProvider extends Component {
       })
     },
 
-    setRepliesToPost : (postId, replies) => {
+    setReplies : (postId, replies) => {
       const { posts } = this.state;
      
       const modifiedPosts = posts.map(post => post.id === postId
@@ -612,7 +653,7 @@ class RootProvider extends Component {
       });
     },
 
-    getPost : postId => {
+    getPost : index => {
       const { abi, contractAddress } = this.state;
       let web3 = window.web3;
 
@@ -625,7 +666,7 @@ class RootProvider extends Component {
         if(!etherBoard)
           reject(new Error("incorrect contractAddress."));;
 
-        etherBoard.getPost(postId , (err, res) => {
+        etherBoard.getPost(index , (err, res) => {
           if(!err){
             resolve(res);
           }else{
@@ -635,7 +676,7 @@ class RootProvider extends Component {
       });
     },
 
-    getReplyCountFromPost : postId => {
+    getPostById : postId => {
       const { abi, contractAddress } = this.state;
       let web3 = window.web3;
 
@@ -648,9 +689,55 @@ class RootProvider extends Component {
         if(!etherBoard)
           reject(new Error("incorrect contractAddress."));;
 
-        etherBoard.getReplyCountFromPost(postId , (err, res) => {
+        etherBoard.getPostById(postId , (err, res) => {
+          if(!err){
+            resolve(res);
+          }else{
+            reject(err);
+          }
+        });
+      });
+    },
+
+    getReplyCount : postId => {
+      const { abi, contractAddress } = this.state;
+      let web3 = window.web3;
+
+      return new Promise((resolve, reject) => {
+        const ehterBoardContract = web3.eth.contract(abi);
+        if(!ehterBoardContract)
+          reject(new Error("incorrect abi."));
+
+        const etherBoard = ehterBoardContract.at(contractAddress);
+        if(!etherBoard)
+          reject(new Error("incorrect contractAddress."));;
+
+        etherBoard.getReplyCount(postId , (err, res) => {
           if(!err){
             resolve(res.toNumber());
+          }else{
+            reject(err);
+          }
+        });
+      });
+    },
+
+    getReply : (postId, index) => {
+      const { abi, contractAddress } = this.state;
+      let web3 = window.web3;
+
+      return new Promise((resolve, reject) => {
+        const ehterBoardContract = web3.eth.contract(abi);
+        if(!ehterBoardContract)
+          reject(new Error("incorrect abi."));
+
+        const etherBoard = ehterBoardContract.at(contractAddress);
+        if(!etherBoard)
+          reject(new Error("incorrect contractAddress."));;
+
+        etherBoard.getReply(postId, index , (err, res) => {
+          if(!err){
+            resolve(res);
           }else{
             reject(err);
           }
@@ -682,14 +769,16 @@ function withRoot(WrappedComponent) {
               abi={state.abi}
               posts={state.posts}
               setPosts={actions.setPosts}
-              setLikeToPost={actions.setLikeToPost}
-              setDislikeToPost={actions.setDislikeToPost}
-              setRepliesToPost={actions.setRepliesToPost}
+              setLike={actions.setLike}
+              setDislike={actions.setDislike}
+              setReplies={actions.setReplies}
               getAccounts={actions.getAccounts}
               writePost={actions.writePost}
               getPostCount={actions.getPostCount}
               getPost={actions.getPost}
-              getReplyCountFromPost={actions.getReplyCountFromPost}
+              getPostById={actions.getPostById}
+              getReplyCount={actions.getReplyCount}
+              getReply={actions.getReply}
               routeTo={actions.routeTo}
             />
           )
