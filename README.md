@@ -1,7 +1,10 @@
 # Ethereum Board
 
 ## Writing Post
-![2](https://user-images.githubusercontent.com/40057797/41903427-d53c4b10-7970-11e8-9149-31a590645f82.png)
+<div>
+  ![a](https://user-images.githubusercontent.com/40057797/41903792-cbbc5dd6-7971-11e8-99ed-fcba54633160.png)
+  ![b](https://user-images.githubusercontent.com/40057797/41903833-e09b7dcc-7971-11e8-85cd-dbaf93a79719.png)
+</div>
 
 ## Required
 - react
