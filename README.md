@@ -1,7 +1,7 @@
 # Ethereum Board
-Fully decentralized blog board based on Ethereum.
-There is no back-end server to save data on App.
-It only depends on ethereum blockchain as a database.
+- Fully decentralized blog board based on Ethereum.
+- There is no back-end server to save data on App.
+- It only depends on ethereum blockchain as a database.
 
 
 ## Postings
