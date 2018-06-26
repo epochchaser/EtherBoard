@@ -1,5 +1,8 @@
 # Ethereum Board
 
+## Writing Post
+![2](https://user-images.githubusercontent.com/40057797/41903427-d53c4b10-7970-11e8-9149-31a590645f82.png)
+
 ## Required
 - react
 - truffle
