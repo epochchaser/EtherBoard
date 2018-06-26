@@ -1,7 +1,28 @@
 # Ethereum Board
+- Fully decentralized blog board based on Ethereum.
+- There is no back-end server to save data on App.
+- It only depends on ethereum blockchain as a database.
+
+
+## Postings
+![e](https://user-images.githubusercontent.com/40057797/41903886-0468ab08-7972-11e8-82f2-c306145020dd.png)
+
+## Writing Post
+![a](https://user-images.githubusercontent.com/40057797/41903792-cbbc5dd6-7971-11e8-99ed-fcba54633160.png)
+![b](https://user-images.githubusercontent.com/40057797/41903833-e09b7dcc-7971-11e8-85cd-dbaf93a79719.png)
+
+## Like, Dislike
+![c](https://user-images.githubusercontent.com/40057797/41903856-ee2d8660-7971-11e8-94ad-bb6384ed3daa.png)
+
+## Reply
+![d](https://user-images.githubusercontent.com/40057797/41903874-fb07c27e-7971-11e8-8197-73758301c542.png)
+
 
 ## Required
 - react
+- react-router
+- draft-js
+- material-ui
 - truffle
 - web3
 - openzeppelin-solidity
